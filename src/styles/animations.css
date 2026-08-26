@@ -1,0 +1,161 @@
+/* =============================================
+   Answered Prayer Network — Animations
+   ============================================= */
+
+/* ── FADE UP (default scroll-trigger) ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── FADE IN ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── SLIDE IN FROM LEFT ── */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── SLIDE IN FROM RIGHT ── */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── SCALE IN ── */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── GOLD RULE GROW ── */
+@keyframes ruleGrow {
+  from { width: 0; opacity: 0; }
+  to   { width: 48px; opacity: 1; }
+}
+
+/* =============================================
+   UTILITY CLASSES
+   ============================================= */
+
+/* Hidden state before animation triggers */
+.anim-hidden {
+  opacity: 0;
+}
+
+/* Shared base for all triggered animations */
+.anim-fade-up {
+  opacity: 0;
+}
+.anim-fade-up.visible {
+  animation: fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.anim-fade-in {
+  opacity: 0;
+}
+.anim-fade-in.visible {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.anim-slide-left {
+  opacity: 0;
+}
+.anim-slide-left.visible {
+  animation: slideInLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.anim-slide-right {
+  opacity: 0;
+}
+.anim-slide-right.visible {
+  animation: slideInRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.anim-scale-in {
+  opacity: 0;
+}
+.anim-scale-in.visible {
+  animation: scaleIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── STAGGER DELAYS ── */
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.40s; }
+.delay-6 { animation-delay: 0.48s; }
+
+/* ── HERO LOAD ANIMATIONS (run immediately on mount) ── */
+@keyframes heroEyebrow {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroTitle {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroDesc {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroBtn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-anim-eyebrow {
+  animation: heroEyebrow 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+.hero-anim-title {
+  animation: heroTitle 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+}
+.hero-anim-desc {
+  animation: heroDesc 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.42s both;
+}
+.hero-anim-btn {
+  animation: heroBtn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.58s both;
+}
+
+/* ── PAGE HEADER LOAD ── */
+.page-hero-eyebrow-anim {
+  animation: heroEyebrow 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+.page-hero-title-anim {
+  animation: heroTitle 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+}
+.page-hero-subtitle-anim {
+  animation: heroDesc 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
+}
+.page-hero-rule-anim {
+  animation: ruleGrow 0.5s ease 0.48s both;
+}

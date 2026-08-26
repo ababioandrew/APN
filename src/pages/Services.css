@@ -1,0 +1,400 @@
+/* =========================================
+   INTRO
+========================================= */
+
+.services-intro {
+  padding: 80px 60px 20px;
+
+  background: var(--white);
+}
+
+.services-intro-inner {
+  max-width: 720px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.services-intro-text {
+  color: var(--gray);
+
+  font-size: 15px;
+
+  line-height: 1.9;
+
+  margin-top: 20px;
+}
+
+
+/* =========================================
+   MINISTRY LIST
+========================================= */
+
+.services-list {
+  padding:
+    50px 60px 80px;
+
+  background: var(--white);
+}
+
+.services-list-inner {
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0;
+}
+
+
+/* =========================================
+   MINISTRY ROW
+========================================= */
+
+.ministry-row {
+  display: grid;
+
+  grid-template-columns:
+    80px 1fr 180px;
+
+  gap: 36px;
+
+  align-items: start;
+
+  padding: 46px 0;
+
+  border-bottom:
+    1px solid var(--light-gray);
+}
+
+.ministry-row--alt {
+  background:
+    var(--off-white);
+
+  padding:
+    46px 36px;
+
+  margin:
+    0 -36px;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.ministry-row-icon {
+  color: var(--gold);
+
+  padding-top: 4px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.ministry-row-title {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 23px;
+
+  font-weight: 600;
+
+  color: var(--navy);
+
+  margin-bottom: 8px;
+}
+
+.ministry-row-desc {
+  color: var(--gray);
+
+  font-size: 14px;
+
+  line-height: 1.9;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================================
+   FEATURES
+========================================= */
+
+.ministry-features {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+}
+
+.ministry-features li {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+
+  text-transform: uppercase;
+
+  color: var(--navy);
+}
+
+.feature-dot {
+  width: 6px;
+
+  height: 6px;
+
+  background: var(--gold);
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+}
+
+
+/* =========================================
+   CTA
+========================================= */
+
+.ministry-row-cta {
+  padding-top: 8px;
+}
+
+
+/* =========================================
+   PROCESS / GROW WITH US
+========================================= */
+
+.process-section {
+  background: var(--navy);
+
+  padding: 90px 60px;
+}
+
+.process-inner {
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+.process-steps {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 0;
+
+  margin-top: 56px;
+}
+
+.process-step {
+  padding:
+    0 32px 0 0;
+
+  border-right:
+    1px solid rgba(255, 255, 255, 0.1);
+}
+
+.process-step:last-child {
+  border-right: none;
+
+  padding-right: 0;
+}
+
+.process-step:not(:first-child) {
+  padding-left: 32px;
+}
+
+
+/* =========================================
+   STEP NUMBER
+========================================= */
+
+.process-step-number {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 48px;
+
+  font-weight: 700;
+
+  color:
+    rgba(201, 168, 76, 0.25);
+
+  line-height: 1;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================================
+   STEP CONTENT
+========================================= */
+
+.process-step-title {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  color: var(--white);
+
+  margin-bottom: 12px;
+}
+
+.process-step-desc {
+  color:
+    rgba(255, 255, 255, 0.6);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+
+/* =========================================
+   CTA SECTION
+========================================= */
+
+.services-cta-section {
+  padding:
+    85px 60px;
+
+  background: var(--white);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+  .services-intro,
+  .services-list,
+  .process-section,
+  .services-cta-section {
+    padding-left: 24px;
+
+    padding-right: 24px;
+  }
+
+
+  .ministry-row {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+
+  .ministry-row--alt {
+    margin: 0;
+
+    padding:
+      40px 24px;
+  }
+
+
+  .ministry-row-icon {
+    justify-content: flex-start;
+  }
+
+
+  .ministry-row-cta {
+    padding-top: 5px;
+  }
+
+
+  .process-steps {
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 36px;
+  }
+
+
+  .process-step {
+    border-right: none;
+
+    padding: 0;
+  }
+
+
+  .process-step:not(:first-child) {
+    padding-left: 0;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .services-intro {
+    padding-top: 60px;
+  }
+
+
+  .services-list {
+    padding-top: 35px;
+
+    padding-bottom: 60px;
+  }
+
+
+  .process-section {
+    padding-top: 65px;
+
+    padding-bottom: 65px;
+  }
+
+
+  .process-steps {
+    grid-template-columns: 1fr;
+
+    gap: 40px;
+  }
+
+
+  .process-step {
+    padding-bottom: 30px;
+
+    border-bottom:
+      1px solid rgba(255, 255, 255, 0.1);
+  }
+
+
+  .process-step:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+  }
+
+
+  .services-cta-section {
+    padding:
+      65px 24px;
+  }
+
+}

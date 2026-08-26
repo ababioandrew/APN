@@ -1,0 +1,129 @@
+.footer {
+  margin-top: auto;
+}
+
+/* Quote band */
+.footer-quote {
+  background: var(--navy-dark);
+  padding: 56px 60px;
+  text-align: center;
+}
+
+.footer-quote-inner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.quote-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.quote-attr {
+  display: block;
+  margin-top: 16px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Footer nav */
+.footer-nav {
+  background: var(--white);
+  border-top: 1px solid var(--light-gray);
+  padding: 16px 60px;
+}
+
+.footer-nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.footer-logo-mark {
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.footer-logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--navy);
+}
+
+.footer-sub {
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: var(--navy);
+  margin-top: 2px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 28px;
+}
+
+.footer-link {
+  font-size: 12px;
+  color: var(--gray);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: color 0.15s;
+}
+
+.footer-link:hover {
+  color: var(--gold);
+}
+
+.footer-copy {
+  font-size: 11px;
+  color: var(--mid-gray);
+}
+
+@media (max-width: 900px) {
+  .footer-quote { padding: 40px 24px; }
+  .footer-nav { padding: 20px 24px; }
+  .footer-nav-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+}
+.footer-logo-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
