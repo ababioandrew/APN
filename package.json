@@ -5,6 +5,7 @@
   "proxy": "http://localhost:5000",
   "type": "module",
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.4",
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
