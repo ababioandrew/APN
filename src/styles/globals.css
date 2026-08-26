@@ -1,0 +1,183 @@
+/* =============================================
+   Answered Prayer Network — Global Styles
+   ============================================= */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --navy:        #1a2744;
+  --navy-dark:   #111c35;
+  --navy-mid:    #1e2f52;
+  --gold:        #c9a84c;
+  --gold-light:  #d4b06a;
+  --gold-pale:   #f0e4c3;
+  --white:       #ffffff;
+  --off-white:   #f5f6f8;
+  --light-gray:  #e2e5eb;
+  --mid-gray:    #9ca3af;
+  --gray:        #6b7280;
+  --dark-gray:   #374151;
+  --text:        #1f2937;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  color: var(--text);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+/* =============================================
+   TYPOGRAPHY UTILITIES
+   ============================================= */
+.font-serif  { font-family: 'Playfair Display', serif; }
+.text-navy   { color: var(--navy); }
+.text-gold   { color: var(--gold); }
+.text-gray   { color: var(--gray); }
+.text-white  { color: var(--white); }
+
+/* =============================================
+   SHARED BUTTONS
+   ============================================= */
+.btn-gold {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--white);
+  border: 2px solid var(--gold);
+  padding: 13px 32px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 0;
+}
+.btn-gold:hover {
+  background: var(--gold-light);
+  border-color: var(--gold-light);
+}
+
+.btn-outline-gold {
+  display: inline-block;
+  background: transparent;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  padding: 13px 32px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 0;
+}
+.btn-outline-gold:hover {
+  background: var(--gold);
+  color: var(--white);
+}
+
+.btn-outline-white {
+  display: inline-block;
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--white);
+  padding: 13px 32px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 0;
+}
+.btn-outline-white:hover {
+  background: var(--white);
+  color: var(--navy);
+}
+
+/* =============================================
+   SECTION UTILITIES
+   ============================================= */
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+.gold-rule {
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: var(--gold);
+  margin: 16px 0;
+}
+
+.gold-rule.centered {
+  margin: 16px auto;
+}
+
+/* =============================================
+   PAGE HEADER BAND
+   ============================================= */
+.page-header-band {
+  background: var(--navy);
+  padding: 18px 60px;
+}
+.page-header-band span {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+
+/* =============================================
+   RESPONSIVE CONTAINER
+   ============================================= */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+@media (max-width: 900px) {
+  .container { padding: 0 24px; }
+  .page-header-band { padding: 18px 24px; }
+}
