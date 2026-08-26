@@ -13,7 +13,7 @@ const initialFormData = {
   remarks: "",
 };
 
-// Simplified fetch - proxy will handle the routing
+// Improved fetch with better error handling
 const fetchJSON = async (endpoint, options = {}) => {
   try {
     const response = await fetch(`/api${endpoint}`, {
@@ -26,6 +26,8 @@ const fetchJSON = async (endpoint, options = {}) => {
     });
 
     const contentType = response.headers.get("content-type") || "";
+    
+    // Handle non-JSON responses
     if (!contentType.includes("application/json")) {
       const text = await response.text();
       console.error("Non-JSON response:", text.substring(0, 200));
@@ -37,19 +39,21 @@ const fetchJSON = async (endpoint, options = {}) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(
-        data?.error || data?.message || `Request failed (${response.status})`
-      );
+      // Extract error message properly
+      const errorMessage = data?.error || data?.message || `Request failed (${response.status})`;
+      throw new Error(errorMessage);
     }
 
     return data;
   } catch (error) {
-    if (error.message.includes('Failed to fetch')) {
+    // Handle network errors
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
       throw new Error(
         'Cannot connect to the backend server. Please ensure the server is running with "npm run server"'
       );
     }
-    throw error;
+    // Re-throw the error with a clean message
+    throw new Error(error.message || 'An unknown error occurred');
   }
 };
 
@@ -77,9 +81,10 @@ const MembersDashboard = () => {
       const result = await fetchJSON("/health");
       setBackendStatus(result);
     } catch (error) {
+      console.error("Health check error:", error);
       setBackendStatus({
         success: false,
-        message: "Backend is not reachable",
+        message: error.message || "Backend is not reachable",
         error: error.message,
       });
     } finally {
@@ -96,24 +101,41 @@ const MembersDashboard = () => {
 
     try {
       const result = await fetchJSON("/members");
+      
+      console.log("Members API response:", result); // Debug log
 
-      const normalizedMembers = (result.members || []).map((member) => ({
+      // Handle different response formats
+      let membersData = [];
+      if (result.members) {
+        membersData = result.members;
+      } else if (result.data) {
+        membersData = result.data;
+      } else if (Array.isArray(result)) {
+        membersData = result;
+      } else {
+        console.warn("Unexpected response format:", result);
+        membersData = [];
+      }
+
+      // Normalize member data
+      const normalizedMembers = membersData.map((member) => ({
         ...member,
-        fullName: member.fullName ?? member.fullname,
-        dateOfBirth: member.dateOfBirth ?? member.dateofbirth,
-        dateOfEntry: member.dateOfEntry ?? member.dateofentry,
-        createdAt: member.createdAt ?? member.createdat,
-        updatedAt: member.updatedAt ?? member.updatedat,
+        fullName: member.fullName ?? member.fullname ?? "",
+        dateOfBirth: member.dateOfBirth ?? member.dateofbirth ?? null,
+        dateOfEntry: member.dateOfEntry ?? member.dateofentry ?? null,
+        createdAt: member.createdAt ?? member.createdat ?? null,
+        updatedAt: member.updatedAt ?? member.updatedat ?? null,
       }));
 
       setMembers(normalizedMembers);
     } catch (error) {
       console.error("GET members error:", error);
-
+      
+      // Show a user-friendly error message
       Swal.fire({
         icon: "error",
         title: "Unable to Load Members",
-        text: error.message,
+        text: error.message || "Failed to load members. Please try again.",
         confirmButtonColor: "#04732d",
       });
     } finally {
@@ -211,7 +233,7 @@ const MembersDashboard = () => {
       fullName: formData.fullName.trim(),
       gender: formData.gender,
       location: formData.location.trim(),
-      dateOfBirth: formData.dateOfBirth,
+      dateOfBirth: formData.dateOfBirth || null,
       dateOfEntry: formData.dateOfEntry,
       contacts: formData.contacts.trim(),
       remarks: formData.remarks.trim(),
@@ -220,10 +242,6 @@ const MembersDashboard = () => {
     try {
       const result = await fetchJSON(`/members/${selectedMember.id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
         body: JSON.stringify(payload),
       });
 
@@ -244,7 +262,7 @@ const MembersDashboard = () => {
       Swal.fire({
         icon: "error",
         title: "Update Failed",
-        text: error.message,
+        text: error.message || "Failed to update member. Please try again.",
         confirmButtonColor: "#d33",
       });
     } finally {
@@ -282,9 +300,6 @@ const MembersDashboard = () => {
     try {
       const result = await fetchJSON(`/members/${id}`, {
         method: "DELETE",
-        headers: {
-          Accept: "application/json",
-        },
       });
 
       Swal.fire({
@@ -307,7 +322,7 @@ const MembersDashboard = () => {
       Swal.fire({
         icon: "error",
         title: "Delete Failed",
-        text: error.message,
+        text: error.message || "Failed to delete member. Please try again.",
         confirmButtonColor: "#d33",
       });
     } finally {
@@ -335,10 +350,6 @@ const MembersDashboard = () => {
     try {
       const result = await fetchJSON("/send-enquiry", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
         body: JSON.stringify({
           message: enquiry.trim(),
         }),
@@ -365,7 +376,7 @@ const MembersDashboard = () => {
       Swal.fire({
         icon: "error",
         title: "Failed to Send",
-        text: error.message,
+        text: error.message || "Failed to send enquiry. Please try again.",
         confirmButtonColor: "#d33",
       });
     } finally {
