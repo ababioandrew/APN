@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { membersApi } from "../config/api";
 import "./FullDetails.css";
 
 const initialFormData = {
@@ -15,9 +16,14 @@ const initialFormData = {
 
 const FullDetails = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // ==========================================
+  // HANDLE INPUT
+  // ==========================================
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +40,10 @@ const FullDetails = () => {
       }));
     }
   };
+
+  // ==========================================
+  // VALIDATE FORM
+  // ==========================================
 
   const validateForm = () => {
     const newErrors = {};
@@ -78,6 +88,10 @@ const FullDetails = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // ==========================================
+  // SUBMIT
+  // ==========================================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -111,41 +125,13 @@ const FullDetails = () => {
     };
 
     console.log("📤 API REQUEST");
-    console.log("URL:", "/api/members");
-    console.log("METHOD:", "POST");
     console.log("BODY:", payload);
 
     try {
-      const response = await fetch("/api/members", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      console.log("📥 RESPONSE STATUS:", response.status);
-      console.log("📥 RESPONSE OK:", response.ok);
-      console.log(
-        "📥 RESPONSE CONTENT-TYPE:",
-        response.headers.get("content-type")
-      );
-
-      const result = await response.json();
-
-      console.log("📥 RESPONSE BODY:", result);
-
-      if (!response.ok) {
-        throw new Error(
-          result?.error ||
-            result?.message ||
-            `Request failed with status ${response.status}`
-        );
-      }
+      const result = await membersApi.create(payload);
 
       console.log("✅ MEMBER SAVED SUCCESSFULLY");
-      console.log("✅ SAVED MEMBER:", result.member);
+      console.log("✅ RESULT:", result);
 
       Swal.fire({
         icon: "success",
@@ -181,24 +167,46 @@ const FullDetails = () => {
     }
   };
 
+  // ==========================================
+  // RENDER
+  // ==========================================
+
   return (
     <div className="membership-details-container">
       <div className="membership-details-card">
+        {/* ==========================================
+            CARD HEADER
+        ========================================== */}
+
         <div className="card-header">
           <h3>Membership Details</h3>
-          <button 
+
+          <button
             className="dashboard-nav-btn"
             onClick={() => navigate("/MembersDashboard")}
             type="button"
           >
-            <svg className="dashboard-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            <svg
+              className="dashboard-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
+
             <span>Dashboard</span>
           </button>
         </div>
-        <form onSubmit={handleSubmit} noValidate>
 
+        {/* ==========================================
+            FORM
+        ========================================== */}
+
+        <form onSubmit={handleSubmit} noValidate>
           {/* Full Name */}
           <div className="form-group">
             <label htmlFor="fullName">
@@ -376,7 +384,6 @@ const FullDetails = () => {
               "Submit"
             )}
           </button>
-
         </form>
       </div>
     </div>

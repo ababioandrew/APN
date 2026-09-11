@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "./MembersDashboard.css";
 import { useNavigate } from "react-router-dom";
+import { membersApi, fetchJSON, API_ENDPOINTS } from "../config/api";
 
 const initialFormData = {
   fullName: "",
@@ -13,52 +14,9 @@ const initialFormData = {
   remarks: "",
 };
 
-// Improved fetch with better error handling
-const fetchJSON = async (endpoint, options = {}) => {
-  try {
-    const response = await fetch(`/api${endpoint}`, {
-      ...options,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-      },
-    });
-
-    const contentType = response.headers.get("content-type") || "";
-    
-    // Handle non-JSON responses
-    if (!contentType.includes("application/json")) {
-      const text = await response.text();
-      console.error("Non-JSON response:", text.substring(0, 200));
-      throw new Error(
-        `Expected JSON but received ${contentType}. Status: ${response.status}`
-      );
-    }
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      // Extract error message properly
-      const errorMessage = data?.error || data?.message || `Request failed (${response.status})`;
-      throw new Error(errorMessage);
-    }
-
-    return data;
-  } catch (error) {
-    // Handle network errors
-    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      throw new Error(
-        'Cannot connect to the backend server. Please ensure the server is running with "npm run server"'
-      );
-    }
-    // Re-throw the error with a clean message
-    throw new Error(error.message || 'An unknown error occurred');
-  }
-};
-
 const MembersDashboard = () => {
   const navigate = useNavigate();
+
   const [members, setMembers] = useState([]);
   const [formData, setFormData] = useState(initialFormData);
   const [selectedMember, setSelectedMember] = useState(null);
@@ -71,17 +29,23 @@ const MembersDashboard = () => {
   const [sendingEnquiry, setSendingEnquiry] = useState(false);
 
   // ==========================================
-  // GET /api/health
+  // HEALTH CHECK
   // ==========================================
 
   const checkHealth = async () => {
     setLoadingHealth(true);
 
     try {
-      const result = await fetchJSON("/health");
-      setBackendStatus(result);
+      const result = await fetchJSON(API_ENDPOINTS.health);
+
+      setBackendStatus({
+        success: true,
+        message: result.message || "API is reachable",
+        database: result.environment || "External JSON API",
+      });
     } catch (error) {
       console.error("Health check error:", error);
+
       setBackendStatus({
         success: false,
         message: error.message || "Backend is not reachable",
@@ -93,49 +57,24 @@ const MembersDashboard = () => {
   };
 
   // ==========================================
-  // GET /api/members
+  // FETCH MEMBERS
   // ==========================================
 
   const fetchMembers = async () => {
     setLoadingMembers(true);
 
     try {
-      const result = await fetchJSON("/members");
-      
-      console.log("Members API response:", result); // Debug log
-
-      // Handle different response formats
-      let membersData = [];
-      if (result.members) {
-        membersData = result.members;
-      } else if (result.data) {
-        membersData = result.data;
-      } else if (Array.isArray(result)) {
-        membersData = result;
-      } else {
-        console.warn("Unexpected response format:", result);
-        membersData = [];
-      }
-
-      // Normalize member data
-      const normalizedMembers = membersData.map((member) => ({
-        ...member,
-        fullName: member.fullName ?? member.fullname ?? "",
-        dateOfBirth: member.dateOfBirth ?? member.dateofbirth ?? null,
-        dateOfEntry: member.dateOfEntry ?? member.dateofentry ?? null,
-        createdAt: member.createdAt ?? member.createdat ?? null,
-        updatedAt: member.updatedAt ?? member.updatedat ?? null,
-      }));
-
+      const normalizedMembers = await membersApi.getAll();
       setMembers(normalizedMembers);
     } catch (error) {
       console.error("GET members error:", error);
-      
-      // Show a user-friendly error message
+
       Swal.fire({
         icon: "error",
         title: "Unable to Load Members",
-        text: error.message || "Failed to load members. Please try again.",
+        text:
+          error.message ||
+          "Failed to load members. Please try again.",
         confirmButtonColor: "#04732d",
       });
     } finally {
@@ -202,7 +141,7 @@ const MembersDashboard = () => {
   };
 
   // ==========================================
-  // PUT /api/members/:id
+  // UPDATE MEMBER (PUT)
   // ==========================================
 
   const handleUpdate = async (e) => {
@@ -240,10 +179,10 @@ const MembersDashboard = () => {
     };
 
     try {
-      const result = await fetchJSON(`/members/${selectedMember.id}`, {
-        method: "PUT",
-        body: JSON.stringify(payload),
-      });
+      const result = await membersApi.update(
+        selectedMember.id,
+        payload
+      );
 
       Swal.fire({
         icon: "success",
@@ -262,7 +201,9 @@ const MembersDashboard = () => {
       Swal.fire({
         icon: "error",
         title: "Update Failed",
-        text: error.message || "Failed to update member. Please try again.",
+        text:
+          error.message ||
+          "Failed to update member. Please try again.",
         confirmButtonColor: "#d33",
       });
     } finally {
@@ -271,13 +212,11 @@ const MembersDashboard = () => {
   };
 
   // ==========================================
-  // DELETE /api/members/:id
+  // DELETE MEMBER
   // ==========================================
 
   const handleDelete = async (id) => {
-    const member = members.find(
-      (item) => item.id === id
-    );
+    const member = members.find((item) => item.id === id);
 
     const confirmation = await Swal.fire({
       icon: "warning",
@@ -295,12 +234,11 @@ const MembersDashboard = () => {
     if (!confirmation.isConfirmed) {
       return;
     }
+
     setDeletingId(id);
 
     try {
-      const result = await fetchJSON(`/members/${id}`, {
-        method: "DELETE",
-      });
+      const result = await membersApi.delete(id);
 
       Swal.fire({
         icon: "success",
@@ -322,7 +260,9 @@ const MembersDashboard = () => {
       Swal.fire({
         icon: "error",
         title: "Delete Failed",
-        text: error.message || "Failed to delete member. Please try again.",
+        text:
+          error.message ||
+          "Failed to delete member. Please try again.",
         confirmButtonColor: "#d33",
       });
     } finally {
@@ -331,8 +271,9 @@ const MembersDashboard = () => {
   };
 
   // ==========================================
-  // POST /api/send-enquiry
+  // SEND ENQUIRY
   // ==========================================
+
   const handleSendEnquiry = async (e) => {
     e.preventDefault();
 
@@ -343,12 +284,14 @@ const MembersDashboard = () => {
         text: "Please enter an enquiry message.",
         confirmButtonColor: "#04732d",
       });
+
       return;
     }
+
     setSendingEnquiry(true);
 
     try {
-      const result = await fetchJSON("/send-enquiry", {
+      const result = await fetchJSON(API_ENDPOINTS.sendEnquiry, {
         method: "POST",
         body: JSON.stringify({
           message: enquiry.trim(),
@@ -357,11 +300,13 @@ const MembersDashboard = () => {
 
       const whatsappNumber = "233548099730";
       const whatsappMessage = encodeURIComponent(
-        result.whatsappCaption || `🔔 NEW CHURCH WEBSITE ENQUIRY\n\n${enquiry.trim()}\n\n📍 Source: Church Website`
+        result.whatsappCaption ||
+          `🔔 NEW CHURCH WEBSITE ENQUIRY\n\n${enquiry.trim()}\n\n📍 Source: Church Website`
       );
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-      
+
       Swal.fire({
         icon: "success",
         title: "Enquiry Sent",
@@ -376,7 +321,9 @@ const MembersDashboard = () => {
       Swal.fire({
         icon: "error",
         title: "Failed to Send",
-        text: error.message || "Failed to send enquiry. Please try again.",
+        text:
+          error.message ||
+          "Failed to send enquiry. Please try again.",
         confirmButtonColor: "#d33",
       });
     } finally {
@@ -384,11 +331,18 @@ const MembersDashboard = () => {
     }
   };
 
+  // ==========================================
+  // FORMAT DATE
+  // ==========================================
+
   const formatDate = (date) => {
     if (!date) return "-";
-    const value = String(date).substring(0, 10);
-    return value;
+    return String(date).substring(0, 10);
   };
+
+  // ==========================================
+  // RENDER
+  // ==========================================
 
   return (
     <div className="members-dashboard">
@@ -397,6 +351,7 @@ const MembersDashboard = () => {
           <h1>Members Management</h1>
           <p>View, update and manage church members.</p>
         </div>
+
         <button
           className="refresh-btn"
           onClick={() => {
@@ -408,19 +363,27 @@ const MembersDashboard = () => {
         </button>
       </div>
 
+      {/* ==========================================
+          BACKEND STATUS
+      ========================================== */}
+
       <section className="dashboard-card health-card">
         <div className="section-heading">
           <h2>Backend & Database Status</h2>
         </div>
 
         {loadingHealth ? (
-          <div className="status-loading">Checking backend...</div>
+          <div className="status-loading">
+            Checking backend...
+          </div>
         ) : backendStatus?.success ? (
           <div className="health-success">
             <span className="status-dot"></span>
+
             <div>
               <strong>Backend Online</strong>
               <p>{backendStatus.message}</p>
+
               {backendStatus.database && (
                 <small>Database: {backendStatus.database}</small>
               )}
@@ -429,13 +392,21 @@ const MembersDashboard = () => {
         ) : (
           <div className="health-error">
             <span className="status-dot"></span>
+
             <div>
               <strong>Backend Offline</strong>
-              <p>{backendStatus?.message || "Unable to connect to backend."}</p>
+              <p>
+                {backendStatus?.message ||
+                  "Unable to connect to backend."}
+              </p>
             </div>
           </div>
         )}
       </section>
+
+      {/* ==========================================
+          EDIT FORM
+      ========================================== */}
 
       {selectedMember && (
         <section className="dashboard-card edit-card">
@@ -444,6 +415,7 @@ const MembersDashboard = () => {
               <h2>Edit Member</h2>
               <p>Member ID: {selectedMember.id}</p>
             </div>
+
             <button
               type="button"
               className="cancel-btn"
@@ -453,7 +425,10 @@ const MembersDashboard = () => {
             </button>
           </div>
 
-          <form className="member-edit-form" onSubmit={handleUpdate}>
+          <form
+            className="member-edit-form"
+            onSubmit={handleUpdate}
+          >
             <div className="form-group">
               <label>Full Name</label>
               <input
@@ -540,6 +515,7 @@ const MembersDashboard = () => {
               >
                 Cancel
               </button>
+
               <button
                 type="submit"
                 className="save-btn"
@@ -552,6 +528,10 @@ const MembersDashboard = () => {
         </section>
       )}
 
+      {/* ==========================================
+          MEMBERS TABLE
+      ========================================== */}
+
       <section className="dashboard-card members-card">
         <div className="section-heading">
           <div>
@@ -560,6 +540,7 @@ const MembersDashboard = () => {
               Total Members: <strong>{members.length}</strong>
             </p>
           </div>
+
           <button
             type="button"
             className="refresh-btn"
@@ -589,17 +570,22 @@ const MembersDashboard = () => {
                   <th>Actions</th>
                 </tr>
               </thead>
+
               <tbody>
                 {members.map((member) => (
                   <tr key={member.id}>
                     <td>{member.id}</td>
-                    <td className="member-name">{member.fullName || "-"}</td>
+                    <td className="member-name">
+                      {member.fullName || "-"}
+                    </td>
                     <td>{member.gender || "-"}</td>
                     <td>{member.location || "-"}</td>
                     <td>{formatDate(member.dateOfBirth)}</td>
                     <td>{formatDate(member.dateOfEntry)}</td>
                     <td>{member.contacts || "-"}</td>
-                    <td className="remarks-cell">{member.remarks || "-"}</td>
+                    <td className="remarks-cell">
+                      {member.remarks || "-"}
+                    </td>
                     <td>
                       <div className="action-buttons">
                         <button
@@ -608,12 +594,15 @@ const MembersDashboard = () => {
                         >
                           Edit
                         </button>
+
                         <button
                           className="delete-btn"
                           onClick={() => handleDelete(member.id)}
                           disabled={deletingId === member.id}
                         >
-                          {deletingId === member.id ? "Deleting..." : "Delete"}
+                          {deletingId === member.id
+                            ? "Deleting..."
+                            : "Delete"}
                         </button>
                       </div>
                     </td>
@@ -625,16 +614,25 @@ const MembersDashboard = () => {
         )}
       </section>
 
+      {/* ==========================================
+          ENQUIRY FORM
+      ========================================== */}
+
       <section className="dashboard-card enquiry-card">
         <div className="section-heading">
           <div>
             <h2>Send Enquiry</h2>
-            <p>Share your candid opinion of ideas to improve church growth.</p>
+            <p>
+              Share your candid opinion or ideas to improve
+              church growth.
+            </p>
           </div>
         </div>
+
         <form onSubmit={handleSendEnquiry}>
           <div className="form-group">
             <label htmlFor="enquiry">Message</label>
+
             <textarea
               id="enquiry"
               value={enquiry}
@@ -643,6 +641,7 @@ const MembersDashboard = () => {
               rows="5"
             />
           </div>
+
           <button
             type="submit"
             className="send-btn"
