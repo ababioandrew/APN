@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { membersApi } from "../config/api";
 import "./BirthdayCelebrants.css";
 
 const BirthdayCelebrants = () => {
@@ -7,22 +8,13 @@ const BirthdayCelebrants = () => {
   const [loading, setLoading] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
 
-  const API_URL = "http://localhost:5000/api/members/birthdays";
-
   useEffect(() => {
     const fetchBirthdays = async () => {
       try {
         setLoading(true);
-
-        const response = await fetch(API_URL);
-        const data = await response.json();
-
-        if (data.success) {
-          setBirthdays(data.birthdays || []);
-          setMonth(data.month || "");
-        } else {
-          setBirthdays([]);
-        }
+        const data = await membersApi.getBirthdays();
+        setBirthdays(data.birthdays || []);
+        setMonth(data.month || "");
       } catch (error) {
         console.error("Failed to load birthday celebrants:", error);
         setBirthdays([]);
@@ -33,7 +25,6 @@ const BirthdayCelebrants = () => {
 
     fetchBirthdays();
   }, []);
-
   if (loading) {
     return (
       <section className="birthday-section birthday-loading">
