@@ -536,6 +536,33 @@ const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex]
     return url;
   };
 
+// =====================================================
+// DOWNLOAD URL FOR AUDIO
+// =====================================================
+
+const getAudioDownloadUrl = (src) => {
+  if (!src) return '';
+
+  // Google Drive: convert any Drive link into a forced-download link
+  if (src.includes('drive.google.com')) {
+    // Already in uc?export=download form → force download
+    if (src.includes('uc?export=download') || src.includes('uc?id=')) {
+      return src.replace(
+        /export=download/,
+        'export=download&confirm=t'
+      );
+    }
+
+    // /file/d/<id>/view form
+    const fileMatch = src.match(/\/file\/d\/([^/]+)/);
+    if (fileMatch) {
+      return `https://drive.google.com/uc?export=download&confirm=t&id=${fileMatch[1]}`;
+    }
+  }
+
+  // Regular URL (mp3, R2, Dropbox raw, self-hosted, etc.)
+  return src;
+};
 
   // =====================================================
   // CLOSE COMMERCIAL
@@ -1213,15 +1240,15 @@ useEffect(() => {
 
 </div>
       </div>
-
-        {/* =================================================
-            SELECTED AUDIO
-        ================================================= */}
-              {selectedAudio && (
+{/* =================================================
+    SELECTED AUDIO
+================================================= */}
+{selectedAudio && (
   <div className="selected-audio">
     <p>
       {selectedAudio.title}
     </p>
+
     <audio
       key={selectedAudio.src}
       ref={audioRef}
@@ -1237,10 +1264,36 @@ useEffect(() => {
       Your browser does not support
       audio playback.
     </audio>
-  </div>
-        )}
 
-        
+    {/* =========================================
+        DOWNLOAD BUTTON
+    ========================================= */}
+    <a
+      href={getAudioDownloadUrl(selectedAudio.src)}
+      download={selectedAudio.fileName || `${selectedAudio.title}.mp3`}
+      className="btn-gold audio-download-btn"
+      style={{
+        display: 'inline-block',
+        marginTop: 12,
+      }}
+      onClick={(e) => {
+        // Google Drive links are cross-origin: the `download`
+        // attribute is ignored by browsers, so open in a new tab
+        // as a fallback so the user gets the file either way.
+        if (selectedAudio.src.includes('drive.google.com')) {
+          e.preventDefault();
+          window.open(
+            getAudioDownloadUrl(selectedAudio.src),
+            '_blank',
+            'noopener,noreferrer'
+          );
+        }
+      }}
+    >
+      ⬇️ Download "{selectedAudio.title}"
+    </a>
+  </div>
+)}
       </div>
 
     </div>
