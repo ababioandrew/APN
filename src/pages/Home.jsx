@@ -260,87 +260,87 @@ const mediaItems = [
   // YOUTUBE VIDEOS
   // ===================================================
 
-{
-  type: 'video',
-  src: 'https://youtube.com/shorts/dbqnn792Y7M',
-  embedUrl: 'https://www.youtube.com/embed/dbqnn792Y7M',
-  isYouTube: true,
-  alt: 'Sunday Sermon',
-  title: 'Sunday Sermon',
-},
+  {
+    type: 'video',
+    src: 'https://youtube.com/shorts/dbqnn792Y7M',
+    embedUrl: 'https://www.youtube.com/embed/dbqnn792Y7M',
+    isYouTube: true,
+    alt: 'Sunday Sermon',
+    title: 'Sunday Sermon',
+  },
 
-{
-  type: 'video',
-  src: 'https://youtube.com/shorts/A7usTs1ds5k',
-  embedUrl: 'https://www.youtube.com/embed/A7usTs1ds5k',
-  isYouTube: true,
-  alt: 'Commanding your week',
-  title: 'Commanding your week',
-},
+  {
+    type: 'video',
+    src: 'https://youtube.com/shorts/A7usTs1ds5k',
+    embedUrl: 'https://www.youtube.com/embed/A7usTs1ds5k',
+    isYouTube: true,
+    alt: 'Commanding your week',
+    title: 'Commanding your week',
+  },
 
-{
-  type: 'video',
-  src: 'https://youtube.com/shorts/mbcNqd7bJGs',
-  embedUrl: 'https://www.youtube.com/embed/mbcNqd7bJGs',
-  isYouTube: true,
-  alt: 'Community Outreach',
-  title: 'Community Outreach',
-},
+  {
+    type: 'video',
+    src: 'https://youtube.com/shorts/mbcNqd7bJGs',
+    embedUrl: 'https://www.youtube.com/embed/mbcNqd7bJGs',
+    isYouTube: true,
+    alt: 'Community Outreach',
+    title: 'Community Outreach',
+  },
 
-{
-  type: 'video',
-  src: 'https://www.youtube.com/watch?v=Z5QRcyom9bw',
-  embedUrl: 'https://www.youtube.com/embed/Z5QRcyom9bw',
-  isYouTube: true,
-  alt: 'Community Outreach',
-  title: 'Community Outreach',
-},
+  {
+    type: 'video',
+    src: 'https://www.youtube.com/watch?v=Z5QRcyom9bw',
+    embedUrl: 'https://www.youtube.com/embed/Z5QRcyom9bw',
+    isYouTube: true,
+    alt: 'Community Outreach',
+    title: 'Community Outreach',
+  },
 
-{
-  type: 'video',
-  src: 'https://www.youtube.com/watch?v=JgWr4jljWXU',
-  embedUrl: 'https://www.youtube.com/embed/JgWr4jljWXU',
-  isYouTube: true,
-  alt: 'Community Outreach',
-  title: 'Community Outreach',
-},
+  {
+    type: 'video',
+    src: 'https://www.youtube.com/watch?v=JgWr4jljWXU',
+    embedUrl: 'https://www.youtube.com/embed/JgWr4jljWXU',
+    isYouTube: true,
+    alt: 'Community Outreach',
+    title: 'Community Outreach',
+  },
 
-// ===================================================
-// COMMANDING YOUR WEEK VIDEOS
-// ===================================================
+  // ===================================================
+  // COMMANDING YOUR WEEK VIDEOS
+  // ===================================================
 
-{
-  type: 'commandingWeek',
-  title: 'Commanding Your Week Videos',
-  alt: 'Commanding Your Week Videos',
+  {
+    type: 'commandingWeek',
+    title: 'Commanding Your Week Videos',
+    alt: 'Commanding Your Week Videos',
 
-  videos: [
-    {
-      type: 'video',
-      src: 'https://youtube.com/shorts/A7usTs1ds5k',
-      embedUrl:
-        'https://www.youtube.com/embed/A7usTs1ds5k',
-      isYouTube: true,
-      title: 'Commanding Your Week',
-      alt: 'Commanding Your Week',
-    },
+    videos: [
+      {
+        type: 'video',
+        src: 'https://youtube.com/shorts/A7usTs1ds5k',
+        embedUrl:
+          'https://www.youtube.com/embed/A7usTs1ds5k',
+        isYouTube: true,
+        title: 'Commanding Your Week',
+        alt: 'Commanding Your Week',
+      },
 
-    // Add more Commanding Your Week videos here
-    {
-      type: 'video',
-      src: 'https://youtube.com/shorts/dbqnn792Y7M',
-      embedUrl:
-        'https://www.youtube.com/embed/dbqnn792Y7M',
-      isYouTube: true,
-      title: 'Commanding Your Week - Part 2',
-      alt: 'Commanding Your Week - Part 2',
-    },
-  ],
-},
+      // Add more Commanding Your Week videos here
+      {
+        type: 'video',
+        src: 'https://youtube.com/shorts/dbqnn792Y7M',
+        embedUrl:
+          'https://www.youtube.com/embed/dbqnn792Y7M',
+        isYouTube: true,
+        title: 'Commanding Your Week - Part 2',
+        alt: 'Commanding Your Week - Part 2',
+      },
+    ],
+  },
   ...localVideos,
 
   ...localAudios,
-  
+
 ];
 
 const statsData = [
@@ -390,9 +390,8 @@ function StatItem({ number, label }) {
     >
 
       <span
-        className={`stat-number ${
-          isVisible ? 'visible' : ''
-        }`}
+        className={`stat-number ${isVisible ? 'visible' : ''
+          }`}
       >
         {displayValue}
       </span>
@@ -406,18 +405,18 @@ function StatItem({ number, label }) {
 }
 
 export default function Home() {
-const [currentIndex, setCurrentIndex] = useState(0);
-const [selectedVideoIndex, setSelectedVideoIndex] = useState('');
-const [selectedAudioIndex, setSelectedAudioIndex] = useState('');
-const playableMedia = mediaItems.filter((item) => item.type === 'video' || item.type === 'audio');
-const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
-const [selectedCommandingWeekIndex, setSelectedCommandingWeekIndex] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState('');
+  const [selectedAudioIndex, setSelectedAudioIndex] = useState('');
+  const playableMedia = mediaItems.filter((item) => item.type === 'video' || item.type === 'audio');
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
+  const [selectedCommandingWeekIndex, setSelectedCommandingWeekIndex] = useState('');
 
-const videoItems = mediaItems.filter((item) => item.type === 'video');
-const commandingWeekItem = mediaItems.find((item) => item.type === 'commandingWeek');
-const audioItems = mediaItems.filter((item) => item.type === 'audio');
-const selectedVideo = selectedVideoIndex !== '' ? videoItems[selectedVideoIndex] : null;
-const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex] : null;
+  const videoItems = mediaItems.filter((item) => item.type === 'video');
+  const commandingWeekItem = mediaItems.find((item) => item.type === 'commandingWeek');
+  const audioItems = mediaItems.filter((item) => item.type === 'audio');
+  const selectedVideo = selectedVideoIndex !== '' ? videoItems[selectedVideoIndex] : null;
+  const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex] : null;
 
 
   // ===================================================
@@ -536,33 +535,33 @@ const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex]
     return url;
   };
 
-// =====================================================
-// DOWNLOAD URL FOR AUDIO
-// =====================================================
+  // =====================================================
+  // DOWNLOAD URL FOR AUDIO
+  // =====================================================
 
-const getAudioDownloadUrl = (src) => {
-  if (!src) return '';
+  const getAudioDownloadUrl = (src) => {
+    if (!src) return '';
 
-  // Google Drive: convert any Drive link into a forced-download link
-  if (src.includes('drive.google.com')) {
-    // Already in uc?export=download form → force download
-    if (src.includes('uc?export=download') || src.includes('uc?id=')) {
-      return src.replace(
-        /export=download/,
-        'export=download&confirm=t'
-      );
+    // Google Drive: convert any Drive link into a forced-download link
+    if (src.includes('drive.google.com')) {
+      // Already in uc?export=download form → force download
+      if (src.includes('uc?export=download') || src.includes('uc?id=')) {
+        return src.replace(
+          /export=download/,
+          'export=download&confirm=t'
+        );
+      }
+
+      // /file/d/<id>/view form
+      const fileMatch = src.match(/\/file\/d\/([^/]+)/);
+      if (fileMatch) {
+        return `https://drive.google.com/uc?export=download&confirm=t&id=${fileMatch[1]}`;
+      }
     }
 
-    // /file/d/<id>/view form
-    const fileMatch = src.match(/\/file\/d\/([^/]+)/);
-    if (fileMatch) {
-      return `https://drive.google.com/uc?export=download&confirm=t&id=${fileMatch[1]}`;
-    }
-  }
-
-  // Regular URL (mp3, R2, Dropbox raw, self-hosted, etc.)
-  return src;
-};
+    // Regular URL (mp3, R2, Dropbox raw, self-hosted, etc.)
+    return src;
+  };
 
   // =====================================================
   // CLOSE COMMERCIAL
@@ -632,8 +631,7 @@ const getAudioDownloadUrl = (src) => {
       cmArr[randomIndex];
 
     console.log(
-      `🎬 Playing commercial ${
-        randomIndex + 1
+      `🎬 Playing commercial ${randomIndex + 1
       } of ${cmArr.length}`
     );
 
@@ -777,35 +775,35 @@ const getAudioDownloadUrl = (src) => {
   ]);
 
   // =====================================================
-// AUTO-PLAY SELECTED AUDIO
-// =====================================================
+  // AUTO-PLAY SELECTED AUDIO
+  // =====================================================
 
-useEffect(() => {
-  if (!selectedAudio || !audioRef.current) {
-    return;
-  }
-
-  const audio = audioRef.current;
-
-  audio.currentTime = 0;
-
-  const playAudio = async () => {
-    try {
-      await audio.play();
-      console.log(`▶️ Now playing: ${selectedAudio.title}`);
-    } catch (error) {
-      // Browsers may block autoplay without user interaction.
-      // Since this is triggered by a user selecting an option
-      // from the dropdown, it usually succeeds.
-      console.warn(
-        '⚠️ Audio autoplay was blocked by the browser:',
-        error
-      );
+  useEffect(() => {
+    if (!selectedAudio || !audioRef.current) {
+      return;
     }
-  };
 
-  playAudio();
-}, [selectedAudio]);
+    const audio = audioRef.current;
+
+    audio.currentTime = 0;
+
+    const playAudio = async () => {
+      try {
+        await audio.play();
+        console.log(`▶️ Now playing: ${selectedAudio.title}`);
+      } catch (error) {
+        // Browsers may block autoplay without user interaction.
+        // Since this is triggered by a user selecting an option
+        // from the dropdown, it usually succeeds.
+        console.warn(
+          '⚠️ Audio autoplay was blocked by the browser:',
+          error
+        );
+      }
+    };
+
+    playAudio();
+  }, [selectedAudio]);
 
   // =====================================================
   // COMMERCIAL ENDED
@@ -871,30 +869,30 @@ useEffect(() => {
       {showCommercial &&
         commercialUrl && (
 
-        <div
-          className="commercial-overlay"
-          role="dialog"
-          aria-label="Advertisement"
-        >
+          <div
+            className="commercial-overlay"
+            role="dialog"
+            aria-label="Advertisement"
+          >
 
-          <video
-            ref={commercialVideoRef}
-            className="commercial-video"
-            src={commercialUrl}
-            autoPlay
-            playsInline
-            preload="auto"
-            controls={false}
-            onEnded={handleCommercialEnded}
-          />
+            <video
+              ref={commercialVideoRef}
+              className="commercial-video"
+              src={commercialUrl}
+              autoPlay
+              playsInline
+              preload="auto"
+              controls={false}
+              onEnded={handleCommercialEnded}
+            />
 
-          <div className="commercial-timer">
-            Advertisement
+            <div className="commercial-timer">
+              Advertisement
+            </div>
+
           </div>
 
-        </div>
-
-      )}
+        )}
 
 
       <main className="home">
@@ -979,372 +977,399 @@ useEffect(() => {
         <BirthdayCelebrants />
 
 
-      {/* =================================================
+        {/* =================================================
     MEDIA SECTION
 ================================================= */}
 
-<section className="media-section">
+        <section className="media-section">
 
-  <div className="media-columns">
+          <div className="media-columns">
 
-    {/* =================================================
+            {/* =================================================
         LEFT COLUMN: SELECTED VIDEO + AUDIO
     ================================================= */}
 
-    <div className="media-column videos">
+            <div className="media-column videos">
 
-      <div className="media-selector-card">
+              <div className="media-selector-card">
 
-        <h2 className="media-selector-title">
-          Media Player
-        </h2>
+                <h2 className="media-selector-title">
+                  Media Player
+                </h2>
 
 
-        {/* =================================================
+                {/* =================================================
             VIDEO SELECTOR
         ================================================= */}
 
-        <div className="media-control-group">
+                <div className="media-control-group">
 
-          <label htmlFor="video-select">
-          🎬 Commanding Your Week
-        </label>
+                  <label htmlFor="video-select">
+                    🎬 Commanding Your Week
+                  </label>
 
-          <select
-            id="video-select"
-            value={selectedVideoIndex}
-            onChange={(e) =>
-              setSelectedVideoIndex(
-                Number(e.target.value)
-              )
-            }
-          >
+                  <select
+                    id="video-select"
+                    value={selectedVideoIndex}
+                    onChange={(e) =>
+                      setSelectedVideoIndex(
+                        e.target.value === '' ? '' : Number(e.target.value)
+                      )
+                    }
+                  >
 
-            <option value="">
-            Commanding Your Week Videos
-            </option>
+                    <option value="">
+                      Commanding Your Week Videos
+                    </option>
 
-            {videoItems.map((item, index) => (
-              <option
-                value={index}
-                key={`${item.fileName || item.src}-${index}`}
-              >
-                {item.title}
-              </option>
-            ))}
+                    {videoItems.map((item, index) => (
+                      <option
+                        value={index}
+                        key={`${item.fileName || item.src}-${index}`}
+                      >
+                        {item.title}
+                      </option>
+                    ))}
 
-          </select>
+                  </select>
 
-        </div>
+                </div>
 
 
-        {/* =================================================
+                {/* =================================================
             SELECTED VIDEO
         ================================================= */}
 
-        {selectedVideo && (
+                {selectedVideo && (
 
-          <div className="selected-video">
+                  <div className="selected-video">
 
-            {selectedVideo.isYouTube ? (
+                    {selectedVideo.isYouTube ? (
 
-              <iframe
-                width="100%"
-                height="315"
-                src={selectedVideo.embedUrl}
-                title={selectedVideo.alt}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+                      <iframe
+                        width="100%"
+                        height="315"
+                        src={selectedVideo.embedUrl}
+                        title={selectedVideo.alt}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
 
-            ) : (
+                    ) : (
 
-              <video
-                key={selectedVideo.src}
-                width="100%"
-                controls
-                preload="metadata"
-              >
-                <source
-                  src={selectedVideo.src}
-                />
+                      <video
+                        key={selectedVideo.src}
+                        width="100%"
+                        controls
+                        preload="metadata"
+                      >
+                        <source
+                          src={selectedVideo.src}
+                        />
 
-                Your browser does not support
-                video playback.
-              </video>
+                        Your browser does not support
+                        video playback.
+                      </video>
 
-            )}
+                    )}
 
-          </div>
+                  </div>
 
-        )}
+                )}
 
 
-        {/* =================================================
+                {/* =================================================
             AUDIO SELECTOR
         ================================================= */}
 
-        <div className="media-control-group">
-        <label htmlFor="audio-select">
-          🎵 Select Audio
-        </label>
-          <select
-            id="audio-select"
-            value={selectedAudioIndex}
-            onChange={(e) =>
-              setSelectedAudioIndex(
-                Number(e.target.value)
-              )
-            }
-          >
+                <div className="media-control-group">
+                  <label htmlFor="audio-select">
+                    🎵 Select Audio
+                  </label>
+                  <select
+                    id="audio-select"
+                    value={selectedAudioIndex}
+                    onChange={(e) =>
+                      setSelectedAudioIndex(
+                        e.target.value === '' ? '' : Number(e.target.value)
+                      )
+                    }
+                  >
 
-            <option value="">
-              Select an audio
-            </option>
+                    <option value="">
+                      Select an audio
+                    </option>
 
-            {audioItems.map((item, index) => (
-              <option
-                value={index}
-                key={`${item.fileName || item.src}-${index}`}
-              >
-                {item.title}
-              </option>
-            ))}
+                    {audioItems.map((item, index) => (
+                      <option
+                        value={index}
+                        key={`${item.fileName || item.src}-${index}`}
+                      >
+                        {item.title}
+                      </option>
+                    ))}
 
-          </select>
+                  </select>
 
-        </div>
+                </div>
 
-{/* =================================================
+                {/* =================================================
     COMMANDING YOUR WEEK VIDEOS
 ================================================= */}
 
-      <div className="media-control-group commanding-week-selector">
-  <label htmlFor="commanding-week-select">
-    🎬 Commanding Your Week Videos
-  </label>
+                <div className="media-control-group commanding-week-selector">
+                  <label htmlFor="commanding-week-select">
+                    🎬 Commanding Your Week Videos
+                  </label>
 
-  <select
-    id="commanding-week-select"
-    value={selectedCommandingWeekIndex}
-    onChange={(e) =>
-      setSelectedCommandingWeekIndex(
-        e.target.value === ''
-          ? ''
-          : Number(e.target.value)
-      )
-    }
-  >
+                  <select
+                    id="commanding-week-select"
+                    value={selectedCommandingWeekIndex}
+                    onChange={(e) =>
+                      setSelectedCommandingWeekIndex(
+                        e.target.value === ''
+                          ? ''
+                          : Number(e.target.value)
+                      )
+                    }
+                  >
 
-    <option value="">
-      Select Commanding Your Week Video
-    </option>
+                    <option value="">
+                      Select Commanding Your Week Video
+                    </option>
 
-    {commandingWeekItem?.videos?.map(
-      (video, index) => (
+                    {commandingWeekItem?.videos?.map(
+                      (video, index) => (
 
-        <option
-          key={`${video.src}-${index}`}
-          value={index}
-        >
-          {video.title}
-        </option>
+                        <option
+                          key={`${video.src}-${index}`}
+                          value={index}
+                        >
+                          {video.title}
+                        </option>
 
-      )
-    )}
+                      )
+                    )}
 
-  </select>
+                  </select>
 
-{/* =================================================
+                  {/* =================================================
     SELECTED COMMANDING YOUR WEEK VIDEO
 ================================================= */}
 
-{selectedCommandingWeekIndex !== '' &&
-  commandingWeekItem?.videos?.[
-    selectedCommandingWeekIndex
-  ] && (
+                  {selectedCommandingWeekIndex !== '' &&
+                    commandingWeekItem?.videos?.[
+                    selectedCommandingWeekIndex
+                    ] && (
 
-    <div className="selected-video commanding-week-video">
+                      <div className="selected-video commanding-week-video">
 
-      {commandingWeekItem.videos[
-        selectedCommandingWeekIndex
-      ].isYouTube ? (
+                        {commandingWeekItem.videos[
+                          selectedCommandingWeekIndex
+                        ].isYouTube ? (
 
-        <iframe
-          width="100%"
-          height="315"
-          src={
-            commandingWeekItem.videos[
-              selectedCommandingWeekIndex
-            ].embedUrl
-          }
-          title={
-            commandingWeekItem.videos[
-              selectedCommandingWeekIndex
-            ].title
-          }
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
+                          <iframe
+                            width="100%"
+                            height="315"
+                            src={
+                              commandingWeekItem.videos[
+                                selectedCommandingWeekIndex
+                              ].embedUrl
+                            }
+                            title={
+                              commandingWeekItem.videos[
+                                selectedCommandingWeekIndex
+                              ].title
+                            }
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
 
-      ) : (
+                        ) : (
 
-        <video
-          width="100%"
-          controls
-          preload="metadata"
-        >
+                          <video
+                            width="100%"
+                            controls
+                            preload="metadata"
+                          >
 
-          <source
-            src={
-              commandingWeekItem.videos[
-                selectedCommandingWeekIndex
-              ].src
-            }
-          />
+                            <source
+                              src={
+                                commandingWeekItem.videos[
+                                  selectedCommandingWeekIndex
+                                ].src
+                              }
+                            />
 
-          Your browser does not support
-          video playback.
+                            Your browser does not support
+                            video playback.
 
-        </video>
+                          </video>
 
-      )}
+                        )}
 
-    </div>
+                      </div>
 
-  )}
+                    )}
 
-  {/* =================================================
+                  {/* =================================================
     MEDIA SELECTION HINT
 ================================================= */}
 
-<div className="media-selection-hint">
+                  <div className="media-selection-hint">
 
-  <div className="hint-arrow">
-    ↑
-  </div>
+                    <div className="hint-arrow">
+                      ↑
+                    </div>
 
-  <div className="hint-icon">
-    🎬
-  </div>
+                    <div className="hint-icon">
+                      🎬
+                    </div>
 
-  <p>
-    Select a video or audio above
-  </p>
+                    <p>
+                      Select a video or audio above
+                    </p>
 
-  <span>
-    Choose from our available media
-  </span>
+                    <span>
+                      Choose from our available media
+                    </span>
 
-</div>
-      </div>
-{/* =================================================
+                  </div>
+                </div>
+                {/* =================================================
     SELECTED AUDIO
 ================================================= */}
-{selectedAudio && (
-  <div className="selected-audio">
-    <p>
-      {selectedAudio.title}
-    </p>
+                {selectedAudio && (
+                  <div className="selected-audio">
+                    <p>
+                      {selectedAudio.title}
+                    </p>
 
-    <audio
-      key={selectedAudio.src}
-      ref={audioRef}
-      controls
-      preload="metadata"
-      style={{
-        width: '100%',
-      }}
-    >
-      <source
-        src={selectedAudio.src}
-      />
-      Your browser does not support
-      audio playback.
-    </audio>
+                    <audio
+                      key={selectedAudio.src}
+                      ref={audioRef}
+                      controls
+                      preload="metadata"
+                      style={{
+                        width: '100%',
+                      }}
+                    >
+                      <source
+                        src={selectedAudio.src}
+                      />
+                      Your browser does not support
+                      audio playback.
+                    </audio>
 
-    {/* =========================================
+                    {/* =========================================
         DOWNLOAD BUTTON
     ========================================= */}
-    <a
-      href={getAudioDownloadUrl(selectedAudio.src)}
-      download={selectedAudio.fileName || `${selectedAudio.title}.mp3`}
-      className="btn-gold audio-download-btn"
-      style={{
-        display: 'inline-block',
-        marginTop: 12,
-      }}
-      onClick={(e) => {
-        // Google Drive links are cross-origin: the `download`
-        // attribute is ignored by browsers, so open in a new tab
-        // as a fallback so the user gets the file either way.
-        if (selectedAudio.src.includes('drive.google.com')) {
-          e.preventDefault();
-          window.open(
-            getAudioDownloadUrl(selectedAudio.src),
-            '_blank',
-            'noopener,noreferrer'
-          );
-        }
-      }}
-    >
-      ⬇️ Download "{selectedAudio.title}"
-    </a>
-  </div>
-)}
-      </div>
+                    {/* =========================================
+    DOWNLOAD BUTTON
+========================================= */}
+                    <a
+                      href={getAudioDownloadUrl(selectedAudio.src)}
+                      download={selectedAudio.fileName || `${selectedAudio.title}.mp3`}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        marginTop: 14,
+                        padding: '14px 18px',
+                        background: '#c9a84c',
+                        color: '#111c35',
+                        borderRadius: 8,
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        fontWeight: 700,
+                        fontSize: '0.95rem',
+                        letterSpacing: '0.3px',
+                        cursor: 'pointer',
+                        border: '2px solid #c9a84c',
+                        position: 'relative',
+                        zIndex: 10,
+                        visibility: 'visible',
+                        opacity: 1,
+                        height: 'auto',
+                        minHeight: 48,
+                        lineHeight: 1.4,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#111c35';
+                        e.currentTarget.style.color = '#ffffff';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#c9a84c';
+                        e.currentTarget.style.color = '#111c35';
+                      }}
+                      onClick={(e) => {
+                        if (selectedAudio.src.includes('drive.google.com')) {
+                          e.preventDefault();
+                          window.open(
+                            getAudioDownloadUrl(selectedAudio.src),
+                            '_blank',
+                            'noopener,noreferrer'
+                          );
+                        }
+                      }}
+                    >
+                      ⬇️ Download &ldquo;{selectedAudio.title}&rdquo;
+                    </a>
+                  </div>
+                )}
+              </div>
 
-    </div>
+            </div>
 
 
 
-    {/* =================================================
+            {/* =================================================
         RIGHT COLUMN: IMAGE SLIDER
     ================================================= */}
 
-    <div className="media-column images">
+            <div className="media-column images">
 
-      <div className="image-slider">
+              <div className="image-slider">
 
-        {(() => {
+                {(() => {
 
-          const images =
-            mediaItems.filter(
-              (item) =>
-                item.type === 'image'
-            );
+                  const images =
+                    mediaItems.filter(
+                      (item) =>
+                        item.type === 'image'
+                    );
 
-          if (images.length === 0) {
-            return null;
-          }
+                  if (images.length === 0) {
+                    return null;
+                  }
 
-          const safeIndex =
-            currentIndex >= images.length
-              ? 0
-              : currentIndex;
+                  const safeIndex =
+                    currentIndex >= images.length
+                      ? 0
+                      : currentIndex;
 
-          return (
-            <img
-              src={
-                images[safeIndex].src
-              }
-              alt={
-                images[safeIndex].alt
-              }
-            />
-          );
+                  return (
+                    <img
+                      src={
+                        images[safeIndex].src
+                      }
+                      alt={
+                        images[safeIndex].alt
+                      }
+                    />
+                  );
 
-        })()}
+                })()}
 
-      </div>
+              </div>
 
-    </div>
+            </div>
 
-  </div>
+          </div>
 
-</section>
+        </section>
         {/* =================================================
             WELCOME
         ================================================= */}
@@ -1352,11 +1377,10 @@ useEffect(() => {
         <section className="welcome">
 
           <div
-            className={`welcome-inner anim-fade-up ${
-              welcomeVisible
+            className={`welcome-inner anim-fade-up ${welcomeVisible
                 ? 'visible'
                 : ''
-            }`}
+              }`}
             ref={welcomeRef}
           >
 
@@ -1411,13 +1435,11 @@ useEffect(() => {
               (ministry, index) => (
 
                 <div
-                  className={`service-card anim-fade-up delay-${
-                    index + 1
-                  } ${
-                    ministriesVisible
+                  className={`service-card anim-fade-up delay-${index + 1
+                    } ${ministriesVisible
                       ? 'visible'
                       : ''
-                  }`}
+                    }`}
                   key={ministry.title}
                 >
 
@@ -1469,11 +1491,10 @@ useEffect(() => {
 
 
             <div
-              className={`why-text anim-slide-left ${
-                whyTextVisible
+              className={`why-text anim-slide-left ${whyTextVisible
                   ? 'visible'
                   : ''
-              }`}
+                }`}
               ref={whyTextRef}
             >
 
@@ -1525,11 +1546,10 @@ useEffect(() => {
 
 
             <div
-              className={`why-image anim-slide-right ${
-                whyImgVisible
+              className={`why-image anim-slide-right ${whyImgVisible
                   ? 'visible'
                   : ''
-              }`}
+                }`}
               ref={whyImgRef}
             >
 
