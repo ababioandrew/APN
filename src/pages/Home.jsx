@@ -8,8 +8,8 @@ import BirthdayCelebrants from '../components/BirthdayCelebrants';
 import { useInView, useCountUp } from '../hooks/useInView';
 import localVideo1 from '../assets/videos/sermon1.mp4';
 import localVideo2 from '../assets/videos/sermon2.mp4';
-import audio1 from '../assets/audios/audioSermon1.mp3';
-import audio2 from '../assets/audios/audioSermon2.mp3';
+// import audio1 from '../assets/audios/audioSermon1.mp3';
+// import audio2 from '../assets/audios/audioSermon2.mp3';
 
 import './Home.css';
 
@@ -99,18 +99,18 @@ const localVideos = [
 const localAudios = [
   {
     type: 'audio',
-    src: audio1,
-    title: 'Audio 1',
-    alt: 'Church Audio 1',
+    // src: 'https://drive.google.com/file/d/1EGX3FlCHioPseLBaQKpamUhdgx_HFjWq/view?usp=drive_link',
+    src: 'https://drive.google.com/uc?export=download&id=1EGX3FlCHioPseLBaQKpamUhdgx_HFjWq',
+    title: 'Sunday Midnight Prayers',
+    alt: 'Sunday Midnight Prayer',
     fileName: 'audio1.mp3',
     local: true,
   },
-
   {
     type: 'audio',
-    src: audio2,
-    title: 'Audio 2',
-    alt: 'Church Audio 2',
+    src: 'https://drive.google.com/uc?export=download&id=1zzQ9jl6iz45lHBqRmDUbjvgO1lWh9Rp1',
+    title: 'Why many are not doers of the word Part 1_Pastor Enoch',
+    alt: 'Why many are not doers of the word Part 1_Pastor Enoch',
     fileName: 'audio2.mp3',
     local: true,
   },
@@ -439,6 +439,7 @@ const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex]
   const commercialShowingRef =
     useRef(false);
 
+  const audioRef = useRef(null);
 
   // ===================================================
   // RANDOM MARQUEE MESSAGE
@@ -748,6 +749,36 @@ const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex]
     commercialUrl,
   ]);
 
+  // =====================================================
+// AUTO-PLAY SELECTED AUDIO
+// =====================================================
+
+useEffect(() => {
+  if (!selectedAudio || !audioRef.current) {
+    return;
+  }
+
+  const audio = audioRef.current;
+
+  audio.currentTime = 0;
+
+  const playAudio = async () => {
+    try {
+      await audio.play();
+      console.log(`▶️ Now playing: ${selectedAudio.title}`);
+    } catch (error) {
+      // Browsers may block autoplay without user interaction.
+      // Since this is triggered by a user selecting an option
+      // from the dropdown, it usually succeeds.
+      console.warn(
+        '⚠️ Audio autoplay was blocked by the browser:',
+        error
+      );
+    }
+  };
+
+  playAudio();
+}, [selectedAudio]);
 
   // =====================================================
   // COMMERCIAL ENDED
@@ -1186,35 +1217,34 @@ const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex]
         {/* =================================================
             SELECTED AUDIO
         ================================================= */}
-
-        {selectedAudio && (
-          <div className="selected-audio">
-            <p>
-              {selectedAudio.title}
-            </p>
-            <audio
-              key={selectedAudio.src}
-              controls
-              preload="metadata"
-              style={{
-                width: '100%',
-              }}
-            >
-              <source
-                src={selectedAudio.src}
-              />
-              Your browser does not support
-              audio playback.
-
-            </audio>
-
-          </div>
-
+              {selectedAudio && (
+  <div className="selected-audio">
+    <p>
+      {selectedAudio.title}
+    </p>
+    <audio
+      key={selectedAudio.src}
+      ref={audioRef}
+      controls
+      preload="metadata"
+      style={{
+        width: '100%',
+      }}
+    >
+      <source
+        src={selectedAudio.src}
+      />
+      Your browser does not support
+      audio playback.
+    </audio>
+  </div>
         )}
 
+        
       </div>
 
     </div>
+
 
 
     {/* =================================================
