@@ -1801,3 +1801,66 @@ to { opacity: 1; }
 .audio-download-btn:hover {
   opacity: 0.85;
 }
+
+/* =========================================================
+   GOOGLE DRIVE AUDIO IFRAME
+========================================================= */
+
+/* Styles the iframe player used for Google Drive audio */
+.selected-audio iframe {
+  display: block;
+  width: 100%;
+  height: 80px; /* Fits the standard Drive audio player height */
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Fallback native audio tag (if used instead of iframe) */
+.selected-audio audio {
+  width: 100%;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+
+/* =========================================================
+   SEPARATOR LINE
+========================================================= */
+
+/* The faint line used to separate the audio and video sections 
+   inside the Media Player card */
+.media-divider {
+  margin: 30px 0;
+  border-top: 1px solid #eaeaea;
+  width: 100%;
+}
+
+
+/* =========================================================
+   MEDIA PICTURES CARD (Top Left)
+========================================================= */
+
+/* Ensures the pictures card has a bit of spacing at the bottom 
+   to separate it from the main Media Player card */
+.media-pictures-card {
+  margin-bottom: 24px;
+}
+
+/* Optional: Add a subtle gold accent to the Pictures title */
+.media-pictures-card .media-selector-title {
+  color: var(--navy);
+}
+
+
+/* =========================================================
+   RESPONSIVE ADJUSTMENTS FOR MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  /* Make the audio iframe slightly shorter on small screens */
+  .selected-audio iframe {
+    height: 70px;
+  }
+}
