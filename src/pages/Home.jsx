@@ -85,7 +85,6 @@ const localAudios = [
     fileName: 'Why many.mp3',
     local: true,
   },
-  // ... (Rest of your audio list remains intact here)
   { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1UD0blLELH72wfrYPr9b1NlmntOZ04z9H', title: 'Violating the laws of God through ignorance_Pastor Enoch', alt: 'Violating the laws of God through ignorance_Pastor Enoch', fileName: 'Violating the laws of God through ignorance_Pastor Enoch.mp3', local: true },
   { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=12Gpj9Sn1xJxoH4s2hxgPBQjfUCGZS81r', title: 'The shiloh cry_ APN', alt: 'The shiloh cry_ APN', fileName: 'The shiloh cry APN.mp3', local: true },
   { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1BH9Bs18hPEMTl0W2S5ZjlwZQ7E-n5ZRg', title: 'When God moves Little by little_Pastor Enoch', alt: 'When God moves Little by little_Pastor Enoch', fileName: 'When God moves Little by little_Pastor Enoch.mp3', local: true },
@@ -238,7 +237,6 @@ export default function Home() {
   const playableMedia = mediaItems.filter((item) => item.type === 'video' || item.type === 'audio');
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
 
-  // Removed videoItems since "Select a video" is gone
   const commandingWeekItem = mediaItems.find((item) => item.type === 'commandingWeek');
   const audioItems = mediaItems.filter((item) => item.type === 'audio');
   const imageItems = mediaItems.filter((item) => item.type === 'image');
@@ -284,6 +282,15 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [imageItems.length]);
+
+  // =====================================================
+  // HELPER: EXTRACT GOOGLE DRIVE FILE ID
+  // =====================================================
+  const getDriveFileId = (src) => {
+    if (!src) return '';
+    const match = src.match(/id=([a-zA-Z0-9_-]+)/) || src.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : '';
+  };
 
   // =====================================================
   // DOWNLOAD URL FOR AUDIO
@@ -371,7 +378,7 @@ export default function Home() {
   }, [showCommercial, commercialUrl]);
 
   // =====================================================
-  // AUTO-PLAY SELECTED AUDIO
+  // AUTO-PLAY SELECTED AUDIO (Native Fallback)
   // =====================================================
   useEffect(() => {
     if (!selectedAudio || !audioRef.current) return;
@@ -383,6 +390,7 @@ export default function Home() {
       try {
         await audio.play();
       } catch (error) {
+        // Autoplay is often blocked by browsers for iframes without interaction.
         console.warn('⚠️ Audio autoplay was blocked by the browser:', error);
       }
     };
@@ -497,10 +505,23 @@ export default function Home() {
                 {selectedAudio && (
                   <div className="selected-audio">
                     <p>{selectedAudio.title}</p>
-                    <audio key={selectedAudio.src} ref={audioRef} controls preload="metadata" style={{ width: '100%' }}>
+                    
+                    {/* Iframe Player for Google Drive Audio */}
+                    <iframe
+                      src={`https://drive.google.com/file/d/${getDriveFileId(selectedAudio.src)}/preview`}
+                      width="100%"
+                      height="80"
+                      allow="autoplay"
+                      frameBorder="0"
+                      style={{ borderRadius: '8px', marginBottom: '14px' }}
+                      title={selectedAudio.title}
+                    />
+
+                    {/* Hidden native audio player kept to satisfy your existing autoplay logic */}
+                    <audio key={selectedAudio.src} ref={audioRef} preload="metadata" style={{ display: 'none' }}>
                       <source src={selectedAudio.src} />
-                      Your browser does not support audio playback.
                     </audio>
+
                     <a
                       href={getAudioDownloadUrl(selectedAudio.src)}
                       download={selectedAudio.fileName || `${selectedAudio.title}.mp3`}
