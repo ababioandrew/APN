@@ -1,0 +1,36 @@
+.page-hero {
+  background: var(--navy);
+  padding: 72px 60px;
+}
+
+.page-hero-inner {
+  max-width: 700px;
+}
+
+.page-hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 8px;
+  line-height: 1.2;
+}
+
+.page-hero-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  line-height: 1.8;
+  margin-top: 14px;
+  max-width: 560px;
+}
+
+@media (max-width: 900px) {
+  .page-hero {
+    padding: 48px 24px;
+  }
+  .page-hero-title {
+    font-size: 26px;
+  }
+}

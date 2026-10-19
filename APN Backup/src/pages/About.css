@@ -1,0 +1,566 @@
+/* =========================================
+   ABOUT PAGE
+========================================= */
+
+
+/* =========================================
+   CHURCH BRAND BAND
+========================================= */
+
+.about-nav-band {
+  background: var(--navy);
+
+  padding: 16px 60px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.08);
+}
+
+.about-nav-inner {
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+.about-nav-inner span {
+  font-size: 10px;
+
+  letter-spacing: 5px;
+
+  text-transform: uppercase;
+
+  color: rgba(255, 255, 255, 0.45);
+}
+
+
+/* =========================================
+   MAIN ABOUT CONTENT
+========================================= */
+
+.about-main {
+  padding: 90px 60px;
+
+  background: var(--white);
+}
+
+.about-main-inner {
+  display: grid;
+
+  grid-template-columns:
+    1fr 460px;
+
+  gap: 70px;
+
+  align-items: center;
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+.about-para {
+  color: var(--gray);
+
+  font-size: 15px;
+
+  line-height: 1.9;
+
+  margin-bottom: 18px;
+}
+
+.about-img {
+  width: 100%;
+
+  height: 450px;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  display: block;
+
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================
+   MINISTRIES
+========================================= */
+
+.about-services {
+  padding:
+    70px 60px 85px;
+
+  background: var(--white);
+
+  border-top:
+    1px solid var(--light-gray);
+}
+
+.about-services-inner {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+.about-service-col {
+  padding:
+    0 36px;
+
+  text-align: center;
+
+  border-right:
+    1px solid var(--light-gray);
+}
+
+.about-service-col:first-child {
+  padding-left: 0;
+}
+
+.about-service-col:last-child {
+  border-right: none;
+
+  padding-right: 0;
+}
+
+.about-service-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin:
+    0 auto 18px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(201, 168, 76, 0.1);
+
+  color: var(--gold);
+
+  font-size: 24px;
+}
+
+.about-service-title {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+  color: var(--navy);
+
+  margin-bottom: 12px;
+}
+
+.about-service-desc {
+  color: var(--gray);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+
+  max-width: 310px;
+
+  margin: 0 auto;
+}
+
+.about-services-cta {
+  text-align: center;
+
+  margin-top: 50px;
+}
+
+
+/* =========================================
+   VALUES
+========================================= */
+
+.values-section {
+  background: var(--navy);
+
+  padding: 90px 60px;
+}
+
+.values-inner {
+  max-width: 1200px;
+
+  margin: 0 auto;
+}
+
+.values-header {
+  margin-bottom: 55px;
+}
+
+.values-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 0;
+}
+
+.value-card {
+  padding:
+    38px 30px;
+
+  border-right:
+    1px solid rgba(255, 255, 255, 0.1);
+
+  border-top:
+    2px solid var(--gold);
+
+  min-height: 220px;
+}
+
+.value-card:last-child {
+  border-right: none;
+}
+
+.value-number {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 36px;
+
+  font-weight: 700;
+
+  color:
+    rgba(201, 168, 76, 0.35);
+
+  line-height: 1;
+
+  margin-bottom: 18px;
+}
+
+.value-title {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+  color: var(--white);
+
+  margin-bottom: 12px;
+}
+
+.value-desc {
+  color:
+    rgba(255, 255, 255, 0.62);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+
+/* =========================================
+   VISION
+========================================= */
+
+.about-vision {
+  padding: 90px 24px;
+
+  background:
+    #faf9f6;
+
+  text-align: center;
+}
+
+.about-vision-inner {
+  max-width: 720px;
+
+  margin: 0 auto;
+}
+
+.vision-cross {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 24px;
+
+  border:
+    1px solid var(--gold);
+
+  border-radius: 50%;
+
+  color: var(--gold);
+
+  font-size: 28px;
+}
+
+.vision-title {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 38px;
+
+  line-height: 1.25;
+
+  color: var(--navy);
+
+  margin:
+    10px 0 20px;
+}
+
+.vision-desc {
+  max-width: 600px;
+
+  margin: 20px auto 0;
+
+  color: var(--gray);
+
+  font-size: 15px;
+
+  line-height: 1.9;
+}
+
+
+/* =========================================
+   CTA
+========================================= */
+
+.about-cta {
+  background: var(--navy-dark);
+
+  padding: 90px 60px;
+}
+
+.about-cta-inner {
+  max-width: 700px;
+
+  margin: 0 auto;
+}
+
+.about-cta-title {
+  font-family:
+    'Playfair Display', serif;
+
+  font-size: 32px;
+
+  color: var(--white);
+
+  text-align: center;
+
+  margin-top: 8px;
+}
+
+.about-cta-desc {
+  color:
+    rgba(255, 255, 255, 0.7);
+
+  text-align: center;
+
+  max-width: 560px;
+
+  margin:
+    20px auto 32px;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+}
+
+.about-cta-buttons {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 14px;
+
+  flex-wrap: wrap;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .about-main-inner {
+    grid-template-columns:
+      1fr 400px;
+
+    gap: 45px;
+  }
+
+  .values-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .value-card:nth-child(2) {
+    border-right: none;
+  }
+
+  .value-card:nth-child(-n + 2) {
+    border-bottom:
+      1px solid rgba(255, 255, 255, 0.1);
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .about-nav-band {
+    padding:
+      16px 24px;
+  }
+
+  .about-main {
+    padding:
+      60px 24px;
+  }
+
+  .about-main-inner {
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+  }
+
+  .about-img {
+    height: 360px;
+  }
+
+
+  .about-services {
+    padding:
+      55px 24px 70px;
+  }
+
+  .about-services-inner {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .about-service-col {
+    border-right: none;
+
+    border-bottom:
+      1px solid var(--light-gray);
+
+    padding:
+      0 0 35px;
+  }
+
+  .about-service-col:first-child {
+    padding-left: 0;
+  }
+
+  .about-service-col:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+
+    padding-right: 0;
+  }
+
+
+  .values-section {
+    padding:
+      60px 24px;
+  }
+
+  .values-grid {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+
+  .about-vision {
+    padding:
+      70px 24px;
+  }
+
+  .vision-title {
+    font-size: 32px;
+  }
+
+
+  .about-cta {
+    padding:
+      60px 24px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .about-main {
+    padding:
+      55px 20px;
+  }
+
+  .about-img {
+    height: 280px;
+  }
+
+
+  .values-section {
+    padding:
+      55px 20px;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .value-card {
+    border-right: none;
+
+    border-bottom:
+      1px solid rgba(255, 255, 255, 0.1);
+
+    min-height: auto;
+  }
+
+  .value-card:nth-child(-n + 2) {
+    border-bottom:
+      1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .value-card:last-child {
+    border-bottom: none;
+  }
+
+
+  .vision-title {
+    font-size: 28px;
+  }
+
+
+  .about-cta {
+    padding:
+      55px 20px;
+  }
+
+  .about-cta-buttons {
+    flex-direction: column;
+  }
+
+}
