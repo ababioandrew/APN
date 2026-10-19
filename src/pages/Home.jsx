@@ -558,7 +558,7 @@ export default function Home() {
                 <div className="media-selection-hint">
                   <div className="hint-arrow">↑</div>
                   <div className="hint-icon"><FaVideo /></div>
-                  <p>Select a picture or audio or video above</p>
+                  <p>Choose an image, audio, or video from the options above.</p>
                   <span>Choose from our available media</span>
                 </div>
 
