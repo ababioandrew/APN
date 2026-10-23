@@ -20,26 +20,10 @@ import commercialVid6 from '../assets/videos/commercial.mp4';
 import commercialVid7 from '../assets/videos/commercial.mp4';
 
 import APNIcon from '../icons/APN.png';
-
-import apnImage1 from '../assets/images/apnImage1.png';
-import apnImage2 from '../assets/images/apnImage2.png';
-import apnImage3 from '../assets/images/apnImage3.png';
-import apnImage4 from '../assets/images/apnImage4.png';
-import apnImage5 from '../assets/images/apnImage5.png';
-import apnImage6 from '../assets/images/apnImage6.png';
-import apnImage7 from '../assets/images/apnImage7.png';
-import apnImage8 from '../assets/images/apnImage8.png';
-import apnImage9 from '../assets/images/apnImage9.png';
-import apnImage10 from '../assets/images/apnImage10.png';
-import apnImage11 from '../assets/images/apnImage11.png';
-import apnImage12 from '../assets/images/apnImage12.png';
-import apnImage13 from '../assets/images/apnImage13.png';
-import apnImage14 from '../assets/images/apnImage14.png';
-import apnImage15 from '../assets/images/apnImage15.png';
-import apnImage16 from '../assets/images/apnImage16.png';
+import apnImage16 from '../assets/images/menthorShip.jpeg';
 
 const cmArr = [
-  commercialVid1, commercialVid2, commercialVid3, commercialVid4, 
+  commercialVid1, commercialVid2, commercialVid3, commercialVid4,
   commercialVid5, commercialVid6, commercialVid7,
 ];
 
@@ -50,69 +34,79 @@ const marqueeMessages = [
 ];
 
 const localVideos = [
-  {
-    type: 'video',
-    src: 'https://www.youtube.com/watch?v=JE3rARGfSyg',
-    embedUrl: 'https://www.youtube.com/embed/JE3rARGfSyg',
-    isYouTube: true,
-    title: '27th Oct 2026 - DEALING WITH DEMONIC RESISTANCE',
-    alt: 'Commanding Your Week',
-  },
-  {
-    type: 'video',
-    src: 'https://www.youtube.com/watch?v=NSGc6wJgTRE',
-    embedUrl: 'https://www.youtube.com/embed/NSGc6wJgTRE',
-    title: '18th Oct 2026',
-    alt: 'Commanding Your Week',
-    isYouTube: true,
-  }
+  { type: 'video', src: 'https://www.youtube.com/watch?v=JE3rARGfSyg', embedUrl: 'https://www.youtube.com/embed/JE3rARGfSyg', isYouTube: true, title: '27th Oct 2026 - DEALING WITH DEMONIC RESISTANCE', alt: 'Commanding Your Week' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=NSGc6wJgTRE', embedUrl: 'https://www.youtube.com/embed/NSGc6wJgTRE', title: '18th Oct 2026', alt: 'Commanding Your Week', isYouTube: true }
 ];
 
 const localAudios = [
-  {
-    type: 'audio',
-    src: 'https://drive.google.com/uc?export=download&id=1EGX3FlCHioPseLBaQKpamUhdgx_HFjWq',
-    title: 'Sunday Midnight Prayers',
-    alt: 'Sunday Midnight Prayers',
-    fileName: 'SundayMidnight.mp3',
-    local: true,
-  },
-  {
-    type: 'audio',
-    src: 'https://drive.google.com/uc?export=download&id=1zzQ9jl6iz45lHBqRmDUbjvgO1lWh9Rp1',
-    title: 'Why many are not doers of the word Part 1_Pastor Enoch',
-    alt: 'Why many are not doers of the word Part 1_Pastor Enoch',
-    fileName: 'Why many.mp3',
-    local: true,
-  },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1UD0blLELH72wfrYPr9b1NlmntOZ04z9H', title: 'Violating the laws of God through ignorance_Pastor Enoch', alt: 'Violating the laws of God through ignorance_Pastor Enoch', fileName: 'Violating the laws of God through ignorance_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=12Gpj9Sn1xJxoH4s2hxgPBQjfUCGZS81r', title: 'The shiloh cry_ APN', alt: 'The shiloh cry_ APN', fileName: 'The shiloh cry APN.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1BH9Bs18hPEMTl0W2S5ZjlwZQ7E-n5ZRg', title: 'When God moves Little by little_Pastor Enoch', alt: 'When God moves Little by little_Pastor Enoch', fileName: 'When God moves Little by little_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1uE2oBQY5D6l-tP_3Bp4kGMrS2IrBNmVT', title: 'September Prayers They Continued 1st session_Pastor Enoch', alt: 'September Prayers They Continued 1st session_Pastor Enoch', fileName: 'September Prayers They Continued 1st session_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=13Lxt_LThco1FgTuQHt9e-zr3a-oACL6O', title: 'Thursday prayer session', alt: 'Thursday prayer session', fileName: 'Thursday prayer session.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1Ba0yYcPPscsOA4dRim3NEbEUUW-89rsu', title: 'The Shiloh Cry_Pastor Enoch', alt: 'The Shiloh Cry_Pastor Enoch', fileName: 'The Shiloh Cry_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1oTckX9bZeW8_xrlOm2dc64WJ8kSwjfcJ', title: 'Waiting on God_Dealing with Impatience_Pastor Enoch', alt: 'Waiting on God_Dealing with Impatience_Pastor Enoch', fileName: 'Waiting on God_Dealing with Impatience_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1I5jPqrKei0Dpcd71nTM5rPnx5c_gUYxh', title: 'Thursday Midnight Prayers_Pastor Enoch', alt: 'Thursday Midnight Prayers_Pastor Enoch', fileName: 'Thursday Midnight Prayers_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1_clkK-Uqe_W-nHSCt22HEaK_TVs6zzf6', title: 'Think on these things_Pastor Enoch', alt: 'Think on these things_Pastor Enoch', fileName: 'Think on these things_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1eSZrfxqIn0EQDGPT7diaekx9dbiAH1Rp', title: 'Thursday Prayer Session_Pastor Enoch', alt: 'Thursday Prayer Session_Pastor Enoch', fileName: 'Thursday Prayer Session_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1qy7W1rG-iaov8f5dRPZQ0cRUNPfHCy4O', title: 'Activating the mystery of intervention through alignment_Pastor Enoch', alt: 'Activating the mystery of intervention through alignment_Pastor Enoch', fileName: 'Activating the mystery of intervention through alignment_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1cbeGYeMqsLmWl_Lu0vLZ6QFo3gM09htg', title: 'The shiloh cry_ Pastor Enoch', alt: 'The shiloh cry_ Pastor Enoch', fileName: 'The shiloh cry Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1-ZPSKzGMwarPXD6imB6WXgJsyMPBlXL2', title: 'preaching from light', alt: 'preaching from light', fileName: 'preaching from light.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1C0abeQIs7MpZNtFBCvgQSB_rtiNToBtK', title: 'The Shiloh Cry', alt: 'The Shiloh Cry', fileName: 'The Shiloh Cry.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1PKeytUT0OEzKzIe_IgpPJEK3s8t4J8CY', title: 'The Shiloh cry_Covenants_Pastor Enoch', alt: 'The Shiloh cry_Covenants_Pastor Enoch', fileName: 'The Shiloh cry Covenants Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1N9RdhgB7YceQ3cD41oX_Qwz_TST3oUoC', title: 'September prayers', alt: 'September prayers', fileName: 'September prayers.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=14yXjGDNnrbSXuMUF4_VTvIJlrVKPbtDT', title: 'Prayer charge_Pastor Enoch', alt: 'Prayer charge_Pastor Enoch', fileName: 'Prayer charge_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1ZFVcpmeLP6IPQsCPHx4TbaV1u5IN-Bnc', title: 'APN Midnight Prayers Manifesting Prophecies_Pastor Enoch', alt: 'APN Midnight Prayers Manifesting Prophecies_Pastor Enoch', fileName: 'APN Midnight Prayers Manifesting Prophecies_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1TOo4BJnL2IOuvYkuDa03KZgmCJlJKtJz', title: 'A call unto prayer_Pastor Enoch', alt: 'A call unto prayer_Pastor Enoch', fileName: 'A call unto prayer_Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1w5_Z-9cYbLcqOFnwL9dOH3uHqVUL-dxu', title: "Don't Give up_Pastor Enoch", alt: "Don't Give up_Pastor Enoch", fileName: "Don't Give up_Pastor Enoch.mp3", local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1_lSyahK3uBbd2CSVFkObaMl89gKczNF9', title: 'Non-cognitive modes of communication 2', alt: 'Non-cognitive modes of communication 2', fileName: 'Non-cognitive modes of communication 2.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1CPtAlSJYUw1K3h9K0mV5vU3MGcX0wr3K', title: 'Non-cognitive modes of communication', alt: 'Non-cognitive modes of communication', fileName: 'Non-cognitive modes of communication.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=17veJST5Ou92IB2UD0M5xBIHqLjc1WeLd', title: 'Manifesting Prophecies_Waiting on God Pastor Enoch', alt: 'Manifesting Prophecies_Waiting on God Pastor Enoch', fileName: 'Manifesting Prophecies Waiting on God Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1CYUb03Fq2LizaBw9uHdH_iuUSW7E129V', title: 'Manifesting Prophecies _the gift of an eye to see Pastor Enoch', alt: 'Manifesting Prophecies the gift of an eye to see Pastor Enoch', fileName: 'Manifesting Prophecies the gift of an eye to see Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1La0LN9oznYGMlhxOuT2UcK8jBxZUMDWK', title: 'Manifesting Prophecies_the gift of an eye_Pastor Enoch', alt: 'Manifesting Prophecies_the gift of an eye_Pastor Enoch', fileName: 'Manifesting Prophecies the gift of an eye Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1VOBfO9J8TXjPxrC2x-75ygKLtV5KERCG', title: 'APN Midnight Prayers Manifesting Prophecies 2 _Pastor Enoch', alt: 'APN Midnight Prayers Manifesting Prophecies 2 _Pastor Enoch', fileName: 'APN Midnight Prayers Manifesting Prophecies 2 Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1RlLmrAvi6lQ1pBeJeyj-kPAUGfgL5Pqx', title: 'Manifesting Prophecies_being fully persuaded_Pastor Enoch', alt: 'Manifesting Prophecies_being fully persuaded_Pastor Enoch', fileName: 'Manifesting Prophecies being fully persuaded Pastor Enoch.mp3', local: true },
-  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1UfYVBYMq2Ima6E59x0EHvCB6FCLleLGl', title: 'Hour Of Mercy with Prophetic prayers_Pastor Enoch', alt: 'Hour Of Mercy with Prophetic prayers_Pastor Enoch', fileName: 'Hour Of Mercy with Prophetic prayers_Pastor Enoch.mp3', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1dIp-bszTMGFEB3y6LNbwWj8IeGD7f2Cp', title: 'Lord teach me your ways_Pastor Enoch', alt: 'Lord teach me your ways_Pastor Enoch', fileName: 'Lord teach me your ways_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1eneFciwAOhkYEujY_eR2GcKvFWPlY1RY', title: 'Lord show me what to do_Pastor Enoch', alt: 'Lord show me what to do_Pastor Enoch', fileName: 'Lord show me what to do_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1c-O6Mi42_5XB24TOf-hwN0qjjPstYIrJ', title: 'Preparatory message Mr and Mrs Peprah', alt: 'Preparatory message Mr and Mrs Peprah', fileName: 'Preparatory message Mr and Mrs Peprah', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1zYBrCqq7oWnbFfu8th2uSiDOASPj3ozY', title: '1st Partners meeting 2025', alt: '1st Partners meeting 2025', fileName: '1st Partners meeting 2025', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1kDdm_pJkP5LJR2qlXKcBkctOZUYA2NN1', title: 'Court Of Heaven day 2_Pastor Enoch', alt: 'Court Of Heaven day 2_Pastor Enoch', fileName: 'Court Of Heaven day 2_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1XDgbawuJlvu-e5TRSSSZx0EoLT-uAgB6', title: 'Look upon me with mercy_Pastor Enoch', alt: 'Look upon me with mercy_Pastor Enoch', fileName: 'Look upon me with mercy_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=18FmoRiReKBaAVDcKpuKbHYz9qccSlSNr', title: '2025-01-09 23-35-51', alt: '2025-01-09 23-35-51', fileName: '2025-01-09 23-35-51', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1s8Kwp49GZG99NuRa9KHXu0RzB64g_r5P', title: 'heighten my Discernment_Pastor Enoch', alt: 'heighten my Discernment_Pastor Enoch', fileName: 'heighten my Discernment_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1duC1koBeulxcec6Fc53cLjcVK11zChft', title: 'Divine Restoration day 2_Pastor Enoch', alt: 'Divine Restoration day 2_Pastor Enoch', fileName: 'Divine Restoration day 2_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1epFrY6k5mmd-cGJp8chAgB5CvXSrNnJz', title: 'Restoration day 1_Pastor Enoch', alt: 'Restoration day 1_Pastor Enoch', fileName: 'Restoration day 1_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1manoB8udsFJy10UURSdtO73GNbOxGUUT', title: 'Language of supplication unedited_Pastor Enoch', alt: 'Language of supplication unedited_Pastor Enoch', fileName: 'Language of supplication unedited_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1zQ_dtkV3usM44fNboqF3LOP5ymkD8j3d', title: '7 hours prayer_the help of God _Pastor Enoch', alt: '7 hours prayer_the help of God _Pastor Enoch', fileName: '7 hours prayer_the help of God _Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1lhpptPHF7F38RRKL2V34t9wXpXZTTqpU', title: '2025-03-14 15-15-18', alt: '2025-03-14 15-15-18', fileName: '2025-03-14 15-15-18', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1EDHRjI1v1O1m7Rro1rOSM9wLlHNU6L1Z', title: 'For you glory_Pastor Enoch', alt: 'For you glory_Pastor Enoch', fileName: 'For you glory_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1dY3VHlHivdZ9Rv4Qg_DAVVfeP077RaFU', title: 'first hour mercy meeting 2025', alt: 'first hour mercy meeting 2025', fileName: 'first hour mercy meeting 2025', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1nn_y7bXCw1--dhqvKNCc7iG59WZ-vd4B', title: 'Hunger for more_Pastor Enoch', alt: 'Hunger for more_Pastor Enoch', fileName: 'Hunger for more_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1CbLdVYdtcOzriQpMaotaskyK_p6H2ZtB', title: 'Conquering the spirit of fear_Pastor Enoch', alt: 'Conquering the spirit of fear_Pastor Enoch', fileName: 'Conquering the spirit of fear_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1HXDfJ-BSSoS6rjcRMjhkQN4HZgLoiFFw', title: 'Conquering the spirit of fear Part 2_Pastor Enoch', alt: 'Conquering the spirit of fear Part 2_Pastor Enoch', fileName: 'Conquering the spirit of fear Part 2_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1jsojzOIoG7x822_YDzyggFm6w7xuJpzE', title: 'prophetic spy 1', alt: 'prophetic spy 1', fileName: 'prophetic spy 1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1lFoVN16J59Cdu00Udgw0XJ9WquiF1s9h', title: 'How satan fights_Pastor Enoch', alt: 'How satan fights_Pastor Enoch', fileName: 'How satan fights_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1EGX3FlCHioPseLBaQKpamUhdgx_HFjWq', title: 'Sunday Midnight Prayers', alt: 'Sunday Midnight Prayers', fileName: 'SundayMidnight', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1QrxZpZjDgbvYQNsTU4SLHLZao7V3xYrt', title: 'Life Is Spiritual _Pastor Enoch', alt: 'Life Is Spiritual _Pastor Enoch', fileName: 'Life Is Spiritual _Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=12B3ZT8gTJoQiuhnuhgHVK-4HlrxJ2B6c', title: 'Praying your obedience before the judge _Pastor Enoch', alt: 'Praying your obedience before the judge _Pastor Enoch', fileName: 'Praying your obedience before the judge _Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1Bi7hLjvyyQeMlDwcLld700ccH3j65NwV', title: 'introduction to the court of heaven_Pastor Enoch', alt: 'introduction to the court of heaven_Pastor Enoch', fileName: 'introduction to the court of heaven_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1e6qBQZdqNbfgYlqFeP8iPa7QRJMIChQQ', title: 'Prayer chain day 1 session 1', alt: 'Prayer chain day 1 session 1', fileName: 'Prayer chain day 1 session 1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=102PgCc-qzOeg2gCiNUR6R1MmYXbx6zmm', title: 'Delivance_A Call Unto Alignment_Past Enoch', alt: 'Why many are not doers of the word Part 1_Pastor Enoch', fileName: 'Why many are not doers of the word Part 1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=12Gpj9Sn1xJxoH4s2hxgPBQjfUCGZS81r', title: 'The shiloh cry_ APN', alt: 'The shiloh cry_ APN', fileName: 'The shiloh cry APN', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1RbWHyN3t_36gK0iwr_p5P9Qe0zYODdK_', title: 'Hear this before 2026_Pastor Enoch', alt: 'Hear this before 2026_Pastor Enoch', fileName: 'Hear this before 2026_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1CzcLsIS8lu00Qg2y8sk4Aw3u--JnXY0F', title: '1st Shiloh cry meeting 2025_Pastor Enoch_1', alt: '1st Shiloh cry meeting 2025_Pastor Enoch_1', fileName: '1st Shiloh cry meeting 2025_Pastor Enoch_1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1CzNMZ0Edq9ln8oil54yrAq8fVQl5OakM', title: 'A call unto prayer_Pastor Enoch_1', alt: 'A call unto prayer_Pastor Enoch_1', fileName: 'A call unto prayer_Pastor Enoch_1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1jxdltrhiNYo3JglQuuYtkXGbnpuYh-Y-', title: 'A call unto prayer1_Pastor Enoch', alt: 'A call unto prayer1_Pastor Enoch', fileName: 'A call unto prayer1_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1IJGN9yeS18PuLMOVWUHW3YIKKD1F5C44', title: 'Accessing higher dimensions of mercy_Pastor Enoch', alt: 'Accessing higher dimensions of mercy_Pastor Enoch', fileName: 'Accessing higher dimensions of mercy_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1D33dh0m4PYq4J0zSNL_bcVbGrWSU_mcf', title: 'Activating the mystery of intervention through alignment_Pastor Enoch_1', alt: 'Activating the mystery of intervention through alignment_Pastor Enoch_1', fileName: 'Activating the mystery of intervention through alignment_Pastor Enoch_1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1L-kQYQAx8ygXrkCOYWDv2wc3YUl_TnfH', title: 'And God wrought special miracles_Pastor Enoch_1', alt: 'And God wrought special miracles_Pastor Enoch_1', fileName: 'And God wrought special miracles_Pastor Enoch_1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1Ye81tkXnj5VvCGrsBoKVCM4zT3hQ3Hb5', title: 'APN Midnight Prayers Manifesting Prophecies 2 _Pastor Enoch_1', alt: 'APN Midnight Prayers Manifesting Prophecies 2 _Pastor Enoch_1', fileName: 'APN Midnight Prayers Manifesting Prophecies 2 _Pastor Enoch_1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1YWsXUOZqeLXdfTnfm4c6_KMMPVya_jtJ', title: 'APN Midnight Prayers Manifesting Prophecies_Pastor Enoch_1', alt: 'APN Midnight Prayers Manifesting Prophecies_Pastor Enoch_1', fileName: 'APN Midnight Prayers Manifesting Prophecies_Pastor Enoch_1', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1ORt6NpbmunfUlqyGt3yctH1d40iYhfSm', title: 'breaking the yoke of kadeshbarnea_Pastor Enoch', alt: 'breaking the yoke of kadeshbarnea_Pastor Enoch', fileName: 'breaking the yoke of kadeshbarnea_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1fA4ey6kAzqxIGQLM_EFDi-KppIwG70Qm', title: 'Breaking the yoke of kadeshbarnea 2_Pastor Enoch', alt: 'Breaking the yoke of kadeshbarnea 2_Pastor Enoch', fileName: 'Breaking the yoke of kadeshbarnea 2_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1z3sM2eku78yBEKHnnvWQR4iWaTbz3bdK', title: 'Court of heaven legalities_evil covenants_Pastor Enoch', alt: 'Court of heaven legalities_evil covenants_Pastor Enoch', fileName: 'Court of heaven legalities_evil covenants_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1pGQUA-wSy_4-xpwT7HuO6qvt8_ot0QWh', title: 'Court of heaven legalities_unforgiveness_Pastor Enoch', alt: 'Court of heaven legalities_unforgiveness_Pastor Enoch', fileName: 'Court of heaven legalities_unforgiveness_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=11Qp3u2z2Q230BXLwiTb5wQZ2Z65hDVnE', title: 'Court of heaven legalities_wrong motives _Ps Enoch', alt: 'Court of heaven legalities_wrong motives _Ps Enoch', fileName: 'Court of heaven legalities_wrong motives _Ps Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1904YtVfBMqEEJeGBeMICj_Co5FL8hTm1', title: 'Court of heaven_wrong motives Part 2_Pastor Enoch', alt: 'Court of heaven_wrong motives Part 2_Pastor Enoch', fileName: 'Court of heaven_wrong motives Part 2_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1m4wBuZaa6LGOY58lQZjrcepMMKE79UDe', title: 'Divine speed_the ministry of men_Pastor Enoch', alt: 'Divine speed_the ministry of men_Pastor Enoch', fileName: 'Divine speed_the ministry of men_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1ZFGkEZB05e-nnBmI6k4iXmcu-KCbacE2', title: 'Lord awake for me_Pastor Enoch', alt: 'Lord awake for me_Pastor Enoch', fileName: 'Lord awake for me_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1DdPfuj4eA5QYMWdlm9HRSisKtmemhE69', title: 'Insight into the court of heaven_Pastor Enoch', alt: 'Insight into the court of heaven_Pastor Enoch', fileName: 'Insight into the court of heaven_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1a1TFVuLRzg5qX6dF8t6vecMhxedDGCxJ', title: 'How to deal with wrong motives_Pastor Enoch', alt: 'How to deal with wrong motives_Pastor Enoch', fileName: 'How to deal with wrong motives_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1CYUb03Fq2LizaBw9uHdH_iuUSW7E129V', title: 'Manifesting Prophecies _the gift of an eye to see Pastor Enoch', alt: 'Manifesting Prophecies _the gift of an eye to see Pastor Enoch', fileName: 'Manifesting Prophecies _the gift of an eye to see Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1nEyNqnKPl7S1I5ouAfY2AYRHZRe-wJO8', title: 'Sermon-by Pastor Enoch', alt: 'Sermon-by Pastor Enoch', fileName: 'Sermon-by Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1ZQNwQfBoTJAxpiaFnQF3z9G4MayqtRXx', title: 'Raising Financial Altars_Pastor Enoch', alt: 'Raising Financial Altars_Pastor Enoch', fileName: 'Raising Financial Altars_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1PgFD1cOk2m6vER7BgZcjquK7Lw8fvx-4', title: 'Restore my wasted years_Pastor Enoch', alt: 'Restore my wasted years_Pastor Enoch', fileName: 'Restore my wasted years_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1yLkeTfAD-6ZGfgszdrsPcAkw75WIUrN4', title: 'Restoration day 3_Pastor Enoch', alt: 'Restoration day 3_Pastor Enoch', fileName: 'Restoration day 3_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1hnCuKZqWs62pUN4Brs--nE8gyqS7fkO9', title: 'Prayers against witchcraft powers_Pastor Enoch', alt: 'Prayers against witchcraft powers_Pastor Enoch', fileName: 'Prayers against witchcraft powers_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1pKyOfLIFriKWudlMBxHU77HdaZ8T6oXS', title: 'The Shiloh cry 24th JAN 2025_Pastor Enoch', alt: 'The Shiloh cry 24th JAN 2025_Pastor Enoch', fileName: 'The Shiloh cry 24th JAN 2025_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1EovEmepGwPf0XRHtg3_vKmjvjM7rYoIf', title: 'Staying with God in prayer_Pastor Enoch', alt: 'Staying with God in prayer_Pastor Enoch', fileName: 'Staying with God in prayer_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1IZowWAauiyfhZGiEaN_KFKnOnnacJMrW', title: 'The burden of alignment_Pastor Enoch', alt: 'The burden of alignment_Pastor Enoch', fileName: 'The burden of alignment_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1BVfUX6NeUNmh425U3imLh-e3msSaDDJu', title: 'Spiritual Empowerment day 2_Pastor Enoch', alt: 'Spiritual Empowerment day 2_Pastor Enoch', fileName: 'Spiritual Empowerment day 2_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1nZqQ7R4VDqraz2JZ0Ff9Gq-6u9-ugyJ-', title: 'Spiritual Empowerment day 3', alt: 'Spiritual Empowerment day 3', fileName: 'Spiritual Empowerment day 3', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=18dRo1yf0OUM9ZeM-wVSBq7bVNIT5Up9Z', title: 'Spiritual Empowerment day 4_The Grace to wait_Pastor Enoch', alt: 'Spiritual Empowerment day 4_The Grace to wait_Pastor Enoch', fileName: 'Spiritual Empowerment day 4_The Grace to wait_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1i1JgI6ao1O87eu1K5dZqH1ys1hSr7kZM', title: 'Spiritual marriage_Pastor Enoch', alt: 'Spiritual marriage_Pastor Enoch', fileName: 'Spiritual marriage_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1Mly8jMsZA8PwC3MAtw6otmyHf5fEiqJF', title: 'Satisfy us early _Pastor Enoch', alt: 'Satisfy us early _Pastor Enoch', fileName: 'Satisfy us early _Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1uJstxfGSfIcjeU5i94bigp0rniz9ChtH', title: 'Satisfy us early_Warfare Prayers_Pastor Enoch', alt: 'Satisfy us early_Warfare Prayers_Pastor Enoch', fileName: 'Satisfy us early_Warfare Prayers_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1vf0lYbjxD_jn1FbRC9ublf_xdjdNCHyW', title: 'Satisfy us early_warfare prayers_Pastor Enoch_2', alt: 'Satisfy us early_warfare prayers_Pastor Enoch_2', fileName: 'Satisfy us early_warfare prayers_Pastor Enoch_2', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1YhG8eDDp7OuOJo1ci-odhzHQSKrTXPiW', title: 'Satisfy us early_delayed prophecies_Pastor Enoch', alt: 'Satisfy us early_delayed prophecies_Pastor Enoch', fileName: 'Satisfy us early_delayed prophecies_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1yl8EZLbt9trxg9fi7_eD88WIrBEzAduo', title: 'The grace for speed 2_Pastor Enoch', alt: 'The grace for speed 2_Pastor Enoch', fileName: 'The grace for speed 2_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1frBIPsowNJUQ42tXPEkX_3C16VINHweL', title: 'The Grace for Speed_Pastor Enoch', alt: 'The Grace for Speed_Pastor Enoch', fileName: 'The Grace for Speed_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1ZdYzs9sXAIzniM8In2-R_jkVsZgUAsIF', title: 'The fear of God_Pastor Enoch', alt: 'The fear of God_Pastor Enoch', fileName: 'The fear of God_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=182m7gMMUBscQ-y_iycPWV77IY9-Ppybt', title: 'The fear of the Lord_Pastor Enoch', alt: 'The fear of the Lord_Pastor Enoch', fileName: 'The fear of the Lord_Pastor Enoch', local: true },
+  { type: 'audio', src: 'https://drive.google.com/uc?export=download&id=1yDQ1K6S7IHNsOy02sgUNpLpy3lAvpq0U', title: 'The dynamics of divine speed_Pastor Enoch', alt: 'The dynamics of divine speed_Pastor Enoch', fileName: 'The dynamics of divine speed_Pastor Enoch', local: true },
 ];
 
 const ministries = [
@@ -123,84 +117,19 @@ const ministries = [
 ];
 
 const mediaItems = [
-  { type: 'image', src: apnImage1, alt: 'Church Event 1', title: 'Church Event 1' },
-  { type: 'image', src: apnImage2, alt: 'Church Event 2', title: 'Church Event 2' },
-  { type: 'image', src: apnImage3, alt: 'Church Event 3', title: 'Church Event 3' },
-  { type: 'image', src: apnImage4, alt: 'Church Event 4', title: 'Church Event 4' },
-  { type: 'image', src: apnImage5, alt: 'Church Event 5', title: 'Church Event 5' },
-  { type: 'image', src: apnImage6, alt: 'Church Event 6', title: 'Church Event 6' },
-  { type: 'image', src: apnImage7, alt: 'Church Event 7', title: 'Church Event 7' },
-  { type: 'image', src: apnImage8, alt: 'Church Event 8', title: 'Church Event 8' },
-  { type: 'image', src: apnImage9, alt: 'Church Event 9', title: 'Church Event 9' },
-  { type: 'image', src: apnImage10, alt: 'Church Event 10', title: 'Church Event 10' },
-  { type: 'image', src: apnImage11, alt: 'Church Event 11', title: 'Church Event 11' },
-  { type: 'image', src: apnImage12, alt: 'Church Event 12', title: 'Church Event 12' },
-  { type: 'image', src: apnImage13, alt: 'Church Event 13', title: 'Church Event 13' },
-  { type: 'image', src: apnImage14, alt: 'Church Event 14', title: 'Church Event 14' },
-  { type: 'image', src: apnImage15, alt: 'Church Event 15', title: 'Church Event 15' },
   { type: 'image', src: apnImage16, alt: 'Church Event 16', title: 'Church Event 16' },
-
-  {
-    type: 'video',
-    src: 'https://youtube.com/shorts/dbqnn792Y7M',
-    embedUrl: 'https://www.youtube.com/embed/dbqnn792Y7M',
-    isYouTube: true,
-    alt: 'Sunday Sermon',
-    title: 'Sunday Sermon',
-  },
-  {
-    type: 'video',
-    src: 'https://youtube.com/shorts/A7usTs1ds5k',
-    embedUrl: 'https://www.youtube.com/embed/A7usTs1ds5k',
-    isYouTube: true,
-    alt: 'Commanding your week',
-    title: 'Commanding your week',
-  },
-  {
-    type: 'video',
-    src: 'https://youtube.com/shorts/mbcNqd7bJGs',
-    embedUrl: 'https://www.youtube.com/embed/mbcNqd7bJGs',
-    isYouTube: true,
-    alt: 'Community Outreach',
-    title: 'Community Outreach',
-  },
-  {
-    type: 'video',
-    src: 'https://www.youtube.com/watch?v=Z5QRcyom9bw',
-    embedUrl: 'https://www.youtube.com/embed/Z5QRcyom9bw',
-    isYouTube: true,
-    alt: 'Community Outreach',
-    title: 'Community Outreach',
-  },
-  {
-    type: 'video',
-    src: 'https://www.youtube.com/watch?v=JgWr4jljWXU',
-    embedUrl: 'https://www.youtube.com/embed/JgWr4jljWXU',
-    isYouTube: true,
-    alt: 'Community Outreach',
-    title: 'Community Outreach',
-  },
+  { type: 'video', src: 'https://youtube.com/shorts/dbqnn792Y7M', embedUrl: 'https://www.youtube.com/embed/dbqnn792Y7M', isYouTube: true, alt: 'Sunday Sermon', title: 'Sunday Sermon' },
+  { type: 'video', src: 'https://youtube.com/shorts/A7usTs1ds5k', embedUrl: 'https://www.youtube.com/embed/A7usTs1ds5k', isYouTube: true, alt: 'Commanding your week', title: 'Commanding your week' },
+  { type: 'video', src: 'https://youtube.com/shorts/mbcNqd7bJGs', embedUrl: 'https://www.youtube.com/embed/mbcNqd7bJGs', isYouTube: true, alt: 'Community Outreach', title: 'Community Outreach' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=Z5QRcyom9bw', embedUrl: 'https://www.youtube.com/embed/Z5QRcyom9bw', isYouTube: true, alt: 'Community Outreach', title: 'Community Outreach' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=JgWr4jljWXU', embedUrl: 'https://www.youtube.com/embed/JgWr4jljWXU', isYouTube: true, alt: 'Community Outreach', title: 'Community Outreach' },
   {
     type: 'commandingWeek',
     title: 'Commanding Your Week Videos',
     alt: 'Commanding Your Week Videos',
     videos: [
-      {
-        type: 'video',
-        src: 'https://youtube.com/shorts/A7usTs1ds5k',
-        embedUrl: 'https://www.youtube.com/embed/A7usTs1ds5k',
-        isYouTube: true,
-        title: 'Commanding Your Week',
-        alt: 'Commanding Your Week',
-      },
-      {
-        type: 'video',
-        src: 'https://youtube.com/shorts/dbqnn792Y7M',
-        embedUrl: 'https://www.youtube.com/embed/dbqnn792Y7M',
-        isYouTube: true,
-        title: 'Commanding Your Week - Part 2',
-        alt: 'Commanding Your Week - Part 2',
-      },
+      { type: 'video', src: 'https://youtube.com/shorts/A7usTs1ds5k', embedUrl: 'https://www.youtube.com/embed/A7usTs1ds5k', isYouTube: true, title: 'Commanding Your Week', alt: 'Commanding Your Week' },
+      { type: 'video', src: 'https://youtube.com/shorts/dbqnn792Y7M', embedUrl: 'https://www.youtube.com/embed/dbqnn792Y7M', isYouTube: true, title: 'Commanding Your Week - Part 2', alt: 'Commanding Your Week - Part 2' },
     ],
   },
   ...localVideos,
@@ -232,7 +161,7 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAudioIndex, setSelectedAudioIndex] = useState('');
   const [selectedCommandingWeekIndex, setSelectedCommandingWeekIndex] = useState('');
-  const [selectedImageIndex, setSelectedImageIndex] = useState('');
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const playableMedia = mediaItems.filter((item) => item.type === 'video' || item.type === 'audio');
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
@@ -240,12 +169,14 @@ export default function Home() {
   const commandingWeekItem = mediaItems.find((item) => item.type === 'commandingWeek');
   const audioItems = mediaItems.filter((item) => item.type === 'audio');
   const imageItems = mediaItems.filter((item) => item.type === 'image');
+  
+  const isSingleImage = imageItems.length === 1;
 
   const selectedAudio = selectedAudioIndex !== '' ? audioItems[selectedAudioIndex] : null;
-  
+
   const selectedCommandingWeekVideo =
     selectedCommandingWeekIndex !== '' &&
-    commandingWeekItem?.videos?.[selectedCommandingWeekIndex]
+      commandingWeekItem?.videos?.[selectedCommandingWeekIndex]
       ? commandingWeekItem.videos[selectedCommandingWeekIndex]
       : null;
 
@@ -257,6 +188,8 @@ export default function Home() {
   const commercialVideoRef = useRef(null);
   const commercialTimeoutRef = useRef(null);
   const commercialShowingRef = useRef(false);
+  
+  const commercialAudioRef = useRef(null); 
   const audioRef = useRef(null);
 
   // ===================================================
@@ -269,22 +202,36 @@ export default function Home() {
   const selectedMedia = playableMedia[selectedMediaIndex] || null;
 
   // =====================================================
+  // FIX: UNLOCK AUDIO AUTOPLAY ON PAGE LOAD
+  // =====================================================
+  useEffect(() => {
+    const unlockAudio = async () => {
+      if (commercialAudioRef.current) {
+        try {
+          commercialAudioRef.current.volume = 0;
+          await commercialAudioRef.current.play();
+          commercialAudioRef.current.pause();
+          commercialAudioRef.current.currentTime = 0;
+        } catch (e) {
+          console.warn("Browser requires user interaction before audio can play.");
+        }
+      }
+    };
+    unlockAudio();
+  }, []);
+  // =====================================================
   // IMAGE SLIDER
   // =====================================================
   useEffect(() => {
-    if (imageItems.length === 0) return undefined;
-
+    if (imageItems.length <= 1) return undefined;
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === imageItems.length - 1 ? 0 : prevIndex + 1
-      );
+      setCurrentIndex((prevIndex) => prevIndex === imageItems.length - 1 ? 0 : prevIndex + 1);
     }, 5000);
-
     return () => clearInterval(interval);
   }, [imageItems.length]);
 
   // =====================================================
-  // HELPER: EXTRACT GOOGLE DRIVE FILE ID
+  // HELPER FUNCTIONS
   // =====================================================
   const getDriveFileId = (src) => {
     if (!src) return '';
@@ -292,9 +239,6 @@ export default function Home() {
     return match ? match[1] : '';
   };
 
-  // =====================================================
-  // DOWNLOAD URL FOR AUDIO
-  // =====================================================
   const getAudioDownloadUrl = (src) => {
     if (!src) return '';
     if (src.includes('drive.google.com')) {
@@ -310,7 +254,7 @@ export default function Home() {
   };
 
   // =====================================================
-  // CLOSE COMMERCIAL
+  // COMMERCIAL LOGIC
   // =====================================================
   const closeCommercial = () => {
     commercialShowingRef.current = false;
@@ -322,19 +266,19 @@ export default function Home() {
       commercialVideoRef.current.pause();
       commercialVideoRef.current.currentTime = 0;
     }
+    if (commercialAudioRef.current) {
+      commercialAudioRef.current.pause();
+      commercialAudioRef.current.currentTime = 0;
+    }
     setShowCommercial(false);
     setCommercialUrl(null);
   };
 
-  // =====================================================
-  // START COMMERCIAL
-  // =====================================================
   const startCommercial = () => {
     if (commercialShowingRef.current || !cmArr || cmArr.length === 0) return;
 
     commercialShowingRef.current = true;
     const randomIndex = Math.floor(Math.random() * cmArr.length);
-    
     setCommercialUrl(cmArr[randomIndex]);
     setShowCommercial(true);
 
@@ -343,58 +287,50 @@ export default function Home() {
     }, 10000);
   };
 
-  // =====================================================
-  // COMMERCIAL TRIGGERS
-  // =====================================================
   useEffect(() => {
     const triggerTimes = [5000, 10000, 15000];
     const timers = triggerTimes.map((time) => setTimeout(() => startCommercial(), time));
-
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
       if (commercialTimeoutRef.current) clearTimeout(commercialTimeoutRef.current);
     };
   }, []);
 
-  // =====================================================
-  // COMMERCIAL VIDEO PLAYBACK
-  // =====================================================
   useEffect(() => {
-    if (!showCommercial || !commercialUrl || !commercialVideoRef.current) return;
+    if (!showCommercial || !commercialUrl) return;
 
-    const video = commercialVideoRef.current;
-    video.currentTime = 0;
-    video.muted = false;
-    video.volume = 1.0;
+    // Play Video
+    if (commercialVideoRef.current) {
+      const video = commercialVideoRef.current;
+      video.currentTime = 0;
+      video.muted = false;
+      video.volume = 1.0;
 
-    const playVideo = async () => {
-      try {
-        await video.play();
-      } catch (error) {
-        console.warn('⚠️ Commercial autoplay with audio was blocked by the browser:', error);
-      }
-    };
-    playVideo();
+      video.play().catch((error) => {
+        console.warn('⚠️ Commercial video autoplay was blocked:', error);
+      });
+    }
+
+    // Play Background Audio
+    if (commercialAudioRef.current) {
+      const audio = commercialAudioRef.current;
+      audio.currentTime = 0;
+      audio.volume = 0.3; 
+
+      audio.play().catch((error) => {
+        console.warn('⚠️ Commercial audio autoplay was blocked:', error);
+      });
+    }
   }, [showCommercial, commercialUrl]);
 
-  // =====================================================
-  // AUTO-PLAY SELECTED AUDIO (Native Fallback)
-  // =====================================================
+  // AUTO-PLAY SELECTED AUDIO
   useEffect(() => {
     if (!selectedAudio || !audioRef.current) return;
-
     const audio = audioRef.current;
     audio.currentTime = 0;
-
-    const playAudio = async () => {
-      try {
-        await audio.play();
-      } catch (error) {
-        // Autoplay is often blocked by browsers for iframes without interaction.
-        console.warn('⚠️ Audio autoplay was blocked by the browser:', error);
-      }
-    };
-    playAudio();
+    audio.play().catch((error) => {
+      console.warn('⚠️ Audio autoplay was blocked by the browser:', error);
+    });
   }, [selectedAudio]);
 
   const handleCommercialEnded = () => closeCommercial();
@@ -425,9 +361,18 @@ export default function Home() {
             controls={false}
             onEnded={handleCommercialEnded}
           />
+          
           <div className="commercial-timer">Advertisement</div>
         </div>
       )}
+
+      {/* HIDDEN COMMERCIAL AUDIO (Placed here so it loads on page start) */}
+      <audio 
+        ref={commercialAudioRef} 
+       src="/audios/commercial.mp3" 
+        preload="auto"
+        style={{ display: 'none' }}
+      />
 
       <main className="home">
         {/* HERO */}
@@ -460,27 +405,28 @@ export default function Home() {
         ================================================= */}
         <section className="media-section">
           <div className="media-columns">
-            
+
             {/* LEFT COLUMN */}
             <div className="media-column videos">
-              
-              {/* --- MEDIA PICTURES --- */}
-              <div className="media-selector-card" style={{ marginBottom: '24px' }}>
-                <h2 className="media-selector-title">Media Pictures</h2>
-                <div className="media-control-group">
-                  <label htmlFor="picture-select">🖼️ Select a picture</label>
-                  <select
-                    id="picture-select"
-                    value={selectedImageIndex}
-                    onChange={(e) => setSelectedImageIndex(e.target.value === '' ? '' : Number(e.target.value))}
-                  >
-                    <option value="">🎬 Commanding Your Week pictures</option>
-                    {imageItems.map((item, index) => (
-                      <option value={index} key={index}>{item.title}</option>
-                    ))}
-                  </select>
+
+              {/* --- MEDIA PICTURES DROPDOWN (Only shows if > 1 image) --- */}
+              {!isSingleImage && (
+                <div className="media-selector-card" style={{ marginBottom: '24px' }}>
+                  <h2 className="media-selector-title">Media Pictures</h2>
+                  <div className="media-control-group">
+                    <label htmlFor="picture-select">🖼️ Select a picture</label>
+                    <select
+                      id="picture-select"
+                      value={selectedImageIndex}
+                      onChange={(e) => setSelectedImageIndex(Number(e.target.value))}
+                    >
+                      {imageItems.map((item, index) => (
+                        <option value={index} key={index}>{item.title}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* --- MEDIA PLAYER --- */}
               <div className="media-selector-card">
@@ -505,7 +451,7 @@ export default function Home() {
                 {selectedAudio && (
                   <div className="selected-audio">
                     <p>{selectedAudio.title}</p>
-                    
+
                     {/* Iframe Player for Google Drive Audio */}
                     <iframe
                       src={`https://drive.google.com/file/d/${getDriveFileId(selectedAudio.src)}/preview`}
@@ -586,13 +532,21 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: IMAGE SLIDER */}
+            {/* RIGHT COLUMN: IMAGE DISPLAY */}
             <div className="media-column images">
-              <div className="image-slider">
+              <div className="full-height-slider">
                 {imageItems.length > 0 && (
                   <img
-                    src={selectedImageIndex !== '' ? imageItems[selectedImageIndex].src : imageItems[currentIndex >= imageItems.length ? 0 : currentIndex].src}
-                    alt={selectedImageIndex !== '' ? imageItems[selectedImageIndex].alt : imageItems[currentIndex >= imageItems.length ? 0 : currentIndex].alt}
+                    src={
+                      isSingleImage 
+                        ? imageItems[0].src 
+                        : imageItems[selectedImageIndex]?.src || imageItems[currentIndex].src
+                    }
+                    alt={
+                      isSingleImage 
+                        ? imageItems[0].alt 
+                        : imageItems[selectedImageIndex]?.alt || imageItems[currentIndex].alt
+                    }
                   />
                 )}
               </div>
