@@ -5,6 +5,8 @@
   "proxy": "http://localhost:5000",
   "type": "module",
   "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-keywords": "^5.1.0",
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
