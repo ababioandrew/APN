@@ -3,6 +3,7 @@ import {BrowserRouter,Routes,Route,useLocation} from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import MembersDashboard from './components/MembersDashboard';
 import FullDetails from './components/FullDetails.jsx';
+import Meeting from './pages/Meeting';
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -32,8 +33,11 @@ return (
 <Route path="/services" element={<Services />}/>
 <Route path="/contact" element={<Contact />}/>
 <Route path="/chatbot" element={<Chatbot />}/>
+<Route path="/meeting" element={<Meeting />} />
 <Route path="*" element={<Home />}/>
 </Routes>
 </BrowserRouter>
 );
 }
+
+

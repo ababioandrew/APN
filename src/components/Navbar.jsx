@@ -98,17 +98,16 @@ const handleAdminClick= ()=> {
 
 const verifyAdminPassword= (e)=> {
   e.preventDefault();
-
-  if (adminPassword=== ADMIN_PASSWORD) {
-    setAdminVerified(true);
-    setAdminOpen(true);
-    setShowAdminPassword(false);
-    setAdminPassword("");
-    setAdminError("");
-  } else {
-    setAdminError("Incorrect admin password.");
-    setAdminPassword("");
-  }
+if (adminPassword === ".apn") {
+  setAdminVerified(true);
+  setAdminOpen(true);
+  setShowAdminPassword(false);
+  setAdminPassword("");
+  setAdminError("");
+} else {
+  setAdminError("Incorrect admin password.");
+  setAdminPassword("");
+}
 };
 
   return (

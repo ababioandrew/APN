@@ -1,658 +1,609 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import "./MembersDashboard.css";
-import { useNavigate } from "react-router-dom";
-import { membersApi, fetchJSON, API_ENDPOINTS } from "../config/api";
 
-const initialFormData = {
-  fullName: "",
-  gender: "",
-  location: "",
-  dateOfBirth: "",
-  dateOfEntry: "",
-  contacts: "",
-  remarks: "",
+// --- DIRECT JSONBIN CONFIGURATION ---
+const JSONBIN_BIN_ID = "6af8d362ac6210605a88248b";
+const JSONBIN_MASTER_KEY = "$2a$10$Q/2lVH/nwELkpa5V3Sf/dOkGCRhpSl46JcsO.dGv5Q1rg/F7P5VO6";
+
+const API = {
+  base: `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`,
+  latest: `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`,
 };
 
-const MembersDashboard = () => {
-  const navigate = useNavigate();
+const ADMIN_DELETE_PASSWORD = ".apn";
 
+// --------------------------------------------------
+// INITIAL APN MEMBERS DATA (Fallback)
+// --------------------------------------------------
+const APN_INITIAL_DATA = [
+  { fullName: "Rich Almor", gender: "Male", location: "Spintex road", dateOfBirth: "2026-11-03", dateOfEntry: "2026-11-03", contacts: "0548099730", email: "honbrewandy@yahoo.com", remarks: "New member", id: "1793707281348", maritalStatus: "", role: "Member" },
+  { fullName: "MAVIS KONADU AMPONG", gender: "Female", location: "TESHIE MENSAH SABAH", dateOfBirth: "1990-01-12", dateOfEntry: "2026-11-14", contacts: "0245937191", email: "", remarks: "", maritalStatus: "Married", role: "Member" },
+  { fullName: "LETICIA KORKOR ASHIAD-LARYEA", gender: "Female", location: "PLOT No 20 GOLF CITY, GK 0219-6336", dateOfBirth: "1984-07-29", dateOfEntry: "2026-11-14", contacts: "0241021023", email: "", remarks: "", maritalStatus: "Married", role: "Leader" },
+];
+
+async function fetchJSON(url, options = {}) {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      "X-Master-Key": JSONBIN_MASTER_KEY,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  const responseText = await response.text();
+  let data = null;
+
+  if (responseText) {
+    try { data = JSON.parse(responseText); } catch { data = responseText; }
+  }
+
+  if (!response.ok) {
+    const message = data && typeof data === "object" ? data.message || data.error : data;
+    throw new Error(message || `Request failed with status ${response.status}`);
+  }
+
+  return data;
+}
+
+function normalizeMember(member) {
+  return {
+    id: member.id || Date.now().toString() + Math.random().toString(36).substring(2, 9),
+    fullName: member.fullName || member.name || "",
+    gender: member.gender || "",
+    location: member.location || "",
+    dateOfBirth: member.dateOfBirth || "",
+    dateOfEntry: member.dateOfEntry || new Date().toISOString().slice(0, 10),
+    contacts: member.contacts || member.phone || "",
+    email: member.email || "",
+    remarks: member.remarks || "",
+    maritalStatus: member.maritalStatus || "",
+    role: member.role || "Member",
+  };
+}
+
+const emptyMember = { 
+  fullName: "", gender: "", location: "", dateOfBirth: "", 
+  dateOfEntry: new Date().toISOString().slice(0, 10), contacts: "", 
+  email: "", remarks: "", maritalStatus: "", role: "" 
+};
+
+const emptyExpense = { title: "", amount: "", category: "", date: new Date().toISOString().slice(0, 10), description: "" };
+const emptyAnnouncement = { title: "", message: "", date: new Date().toISOString().slice(0, 10) };
+
+export default function MembersDashboard() {
+  const [activeTab, setActiveTab] = useState("members");
   const [members, setMembers] = useState([]);
-  const [formData, setFormData] = useState(initialFormData);
-  const [selectedMember, setSelectedMember] = useState(null);
-  const [loadingMembers, setLoadingMembers] = useState(false);
-  const [loadingHealth, setLoadingHealth] = useState(false);
+  const [expenses, setExpenses] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [attendanceData, setAttendanceData] = useState([]); 
+  const [selectedHistoryRecord, setSelectedHistoryRecord] = useState(null);
+
+  const [memberForm, setMemberForm] = useState(emptyMember);
+  const [expenseForm, setExpenseForm] = useState(emptyExpense);
+  const [announcementForm, setAnnouncementForm] = useState(emptyAnnouncement);
+  const [editingMember, setEditingMember] = useState(null);
+
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
+  const [currentAttendance, setCurrentAttendance] = useState({});
+  const [attendanceSearch, setAttendanceSearch] = useState("");
+  const [summaryView, setSummaryView] = useState("present"); 
+
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [deletingId, setDeletingId] = useState(null);
-  const [backendStatus, setBackendStatus] = useState(null);
-  const [enquiry, setEnquiry] = useState("");
-  const [sendingEnquiry, setSendingEnquiry] = useState(false);
+  const [backendStatus, setBackendStatus] = useState("Checking...");
 
-  // ==========================================
-  // HEALTH CHECK
-  // ==========================================
+  const showAlert = (icon, title, text) => Swal.fire({ icon, title, text, timer: 3000, timerProgressBar: true, showConfirmButton: false });
 
-  const checkHealth = async () => {
-    setLoadingHealth(true);
-
+  const fetchData = useCallback(async () => {
     try {
-      const result = await fetchJSON(API_ENDPOINTS.health);
-
-      setBackendStatus({
-        success: true,
-        message: result.message || "API is reachable",
-        database: result.environment || "External JSON API",
-      });
+      setLoading(true);
+      const data = await fetchJSON(API.latest);
+      
+      const record = data?.record || data;
+      
+      setMembers((record?.members || []).map(normalizeMember));
+      setAttendanceData(record?.attendance || []);
+      setExpenses(record?.expenses || []);
+      setAnnouncements(record?.announcements || []);
+      
+      setBackendStatus("Connected (JSONBin)");
     } catch (error) {
-      console.error("Health check error:", error);
-
-      setBackendStatus({
-        success: false,
-        message: error.message || "Backend is not reachable",
-        error: error.message,
-      });
+      console.error("Data loading error:", error);
+      setBackendStatus("Connection failed");
+      setMembers(APN_INITIAL_DATA.map(normalizeMember));
     } finally {
-      setLoadingHealth(false);
+      setLoading(false);
     }
-  };
-
-  // ==========================================
-  // FETCH MEMBERS
-  // ==========================================
-
-  const fetchMembers = async () => {
-    setLoadingMembers(true);
-
-    try {
-      const normalizedMembers = await membersApi.getAll();
-      setMembers(normalizedMembers);
-    } catch (error) {
-      console.error("GET members error:", error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Unable to Load Members",
-        text:
-          error.message ||
-          "Failed to load members. Please try again.",
-        confirmButtonColor: "#04732d",
-      });
-    } finally {
-      setLoadingMembers(false);
-    }
-  };
-
-  // ==========================================
-  // INITIAL LOAD
-  // ==========================================
-
-  useEffect(() => {
-    checkHealth();
-    fetchMembers();
   }, []);
 
-  // ==========================================
-  // HANDLE INPUT
-  // ==========================================
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // ==========================================
-  // OPEN EDIT FORM
-  // ==========================================
-
-  const handleEdit = (member) => {
-    setSelectedMember(member);
-
-    setFormData({
-      fullName: member.fullName || "",
-      gender: member.gender || "",
-      location: member.location || "",
-      dateOfBirth: member.dateOfBirth
-        ? String(member.dateOfBirth).substring(0, 10)
-        : "",
-      dateOfEntry: member.dateOfEntry
-        ? String(member.dateOfEntry).substring(0, 10)
-        : "",
-      contacts: member.contacts || "",
-      remarks: member.remarks || "",
-    });
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  // ==========================================
-  // CANCEL EDIT
-  // ==========================================
-
-  const handleCancelEdit = () => {
-    setSelectedMember(null);
-    setFormData(initialFormData);
-  };
-
-  // ==========================================
-  // UPDATE MEMBER (PUT)
-  // ==========================================
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-
-    if (!selectedMember) {
-      return;
-    }
-
-    if (
-      !formData.fullName.trim() ||
-      !formData.gender ||
-      !formData.dateOfEntry
-    ) {
-      Swal.fire({
-        icon: "warning",
-        title: "Incomplete Form",
-        text: "Full name, gender and date of entry are required.",
-        confirmButtonColor: "#04732d",
-      });
-
-      return;
-    }
-
-    setSaving(true);
-
+  const saveDashboardData = async (updatedMembers, updatedAttendance, updatedExpenses, updatedAnnouncements) => {
     const payload = {
-      fullName: formData.fullName.trim(),
-      gender: formData.gender,
-      location: formData.location.trim(),
-      dateOfBirth: formData.dateOfBirth || null,
-      dateOfEntry: formData.dateOfEntry,
-      contacts: formData.contacts.trim(),
-      remarks: formData.remarks.trim(),
+      members: updatedMembers !== null ? updatedMembers : members,
+      attendance: updatedAttendance !== null ? updatedAttendance : attendanceData,
+      expenses: updatedExpenses !== null ? updatedExpenses : expenses,
+      announcements: updatedAnnouncements !== null ? updatedAnnouncements : announcements,
     };
-
+    
     try {
-      const result = await membersApi.update(
-        selectedMember.id,
-        payload
-      );
-
-      Swal.fire({
-        icon: "success",
-        title: "Member Updated",
-        text: result.message || "Member updated successfully!",
-        confirmButtonColor: "#04732d",
+      await fetchJSON(API.base, {
+        method: "PUT",
+        body: JSON.stringify(payload),
       });
-
-      setSelectedMember(null);
-      setFormData(initialFormData);
-
-      await fetchMembers();
+      localStorage.setItem('apn_dashboard_backup', JSON.stringify(payload));
+      return true;
     } catch (error) {
-      console.error("PUT member error:", error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Update Failed",
-        text:
-          error.message ||
-          "Failed to update member. Please try again.",
-        confirmButtonColor: "#d33",
-      });
-    } finally {
-      setSaving(false);
+      console.error("Failed to save to JSONBin:", error);
+      localStorage.setItem('apn_dashboard_backup', JSON.stringify(payload));
+      throw error;
     }
   };
 
-  // ==========================================
-  // DELETE MEMBER
-  // ==========================================
+  const handleSaveMember = async (event) => {
+    event.preventDefault();
+    if (!memberForm.fullName.trim()) return showAlert("warning", "Missing Information", "Please enter the member's full name.");
 
-  const handleDelete = async (id) => {
-    const member = members.find((item) => item.id === id);
+    try {
+      setSaving(true);
+      let updatedList = editingMember
+        ? members.map((m) => m.id === editingMember ? { ...m, ...memberForm } : m)
+        : [...members, { ...memberForm, id: Date.now().toString() }];
 
-    const confirmation = await Swal.fire({
-      icon: "warning",
-      title: "Delete Member?",
-      text: member
-        ? `Are you sure you want to delete ${member.fullName}?`
-        : "Are you sure you want to delete this member?",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#6c757d",
-      confirmButtonText: "Yes, Delete",
-      cancelButtonText: "Cancel",
+      await saveDashboardData(updatedList, null, null, null);
+      setMembers(updatedList);
+      setMemberForm(emptyMember);
+      setEditingMember(null);
+      showAlert("success", editingMember ? "Member Updated" : "Member Added", "Saved to cloud successfully!");
+    } catch (error) {
+      showAlert("error", "Save Failed", error.message);
+    } finally { setSaving(false); }
+  };
+
+  const handleDeleteMember = async (member) => {
+    const confirmation = await Swal.fire({ icon: "warning", title: "Delete Member?", html: `Are you sure you want to delete <strong>${member.fullName}</strong>?`, showCancelButton: true, confirmButtonColor: "#d33" });
+    if (!confirmation.isConfirmed) return;
+
+    const passwordPrompt = await Swal.fire({
+      title: "Admin Password Required", input: "password", showCancelButton: true, confirmButtonColor: "#d33",
+      inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
     });
-
-    if (!confirmation.isConfirmed) {
-      return;
-    }
-
-    setDeletingId(id);
+    if (!passwordPrompt.isConfirmed) return;
+    if (passwordPrompt.value !== ADMIN_DELETE_PASSWORD) return Swal.fire({ icon: "error", title: "Incorrect Password", confirmButtonColor: "#d33" });
 
     try {
-      const result = await membersApi.delete(id);
+      setSaving(true);
+      const updatedList = members.filter((m) => m.id !== member.id);
+      await saveDashboardData(updatedList, null, null, null);
+      setMembers(updatedList);
+      showAlert("success", "Member Deleted", "Removed from cloud successfully.");
+    } catch (error) { showAlert("error", "Delete Failed", error.message); } finally { setSaving(false); }
+  };
 
-      Swal.fire({
-        icon: "success",
-        title: "Deleted",
-        text: result.message || "Member deleted successfully!",
-        confirmButtonColor: "#04732d",
-      });
-
-      setMembers((prev) =>
-        prev.filter((member) => member.id !== id)
-      );
-
-      if (selectedMember?.id === id) {
-        handleCancelEdit();
+  const handleSaveAttendance = async () => {
+    try {
+      const existingRecord = attendanceData.find((a) => a.date === selectedDate);
+      if (existingRecord) {
+        const passwordPrompt = await Swal.fire({
+          title: "Update Existing Attendance?", text: `Enter admin password to update ${selectedDate}.`, input: "password", showCancelButton: true, confirmButtonColor: "#3b82f6",
+          inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
+        });
+        if (!passwordPrompt.isConfirmed) return;
+        if (passwordPrompt.value !== ADMIN_DELETE_PASSWORD) return Swal.fire({ icon: "error", title: "Incorrect Password", confirmButtonColor: "#d33" });
       }
-    } catch (error) {
-      console.error("DELETE member error:", error);
 
-      Swal.fire({
-        icon: "error",
-        title: "Delete Failed",
-        text:
-          error.message ||
-          "Failed to delete member. Please try again.",
-        confirmButtonColor: "#d33",
-      });
-    } finally {
-      setDeletingId(null);
-    }
+      setSaving(true);
+      const presentCount = Object.values(currentAttendance).filter(Boolean).length;
+      const newRecord = { date: selectedDate, records: currentAttendance, totalPresent: presentCount, totalMembers: members.length };
+
+      let updatedAttendance = attendanceData.filter((a) => a.date !== selectedDate);
+      updatedAttendance.push(newRecord);
+      updatedAttendance.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      await saveDashboardData(null, updatedAttendance, null, null);
+      setAttendanceData(updatedAttendance);
+      showAlert("success", "Attendance Submitted", `Attendance for ${selectedDate} saved successfully!`);
+    } catch (error) { showAlert("error", "Submit Failed", error.message); } finally { setSaving(false); }
   };
 
-  // ==========================================
-  // SEND ENQUIRY
-  // ==========================================
-
-  const handleSendEnquiry = async (e) => {
-    e.preventDefault();
-
-    if (!enquiry.trim()) {
-      Swal.fire({
-        icon: "warning",
-        title: "Message Required",
-        text: "Please enter an enquiry message.",
-        confirmButtonColor: "#04732d",
-      });
-
-      return;
-    }
-
-    setSendingEnquiry(true);
-
+  const handleSaveAnnouncement = async (event) => {
+    event.preventDefault();
+    if (!announcementForm.title.trim() || !announcementForm.message.trim()) return showAlert("warning", "Missing Info", "Enter title and message.");
+    
     try {
-      const result = await fetchJSON(API_ENDPOINTS.sendEnquiry, {
-        method: "POST",
-        body: JSON.stringify({
-          message: enquiry.trim(),
-        }),
-      });
+      setSaving(true);
+      const newAnnouncement = { ...announcementForm, id: Date.now().toString() };
+      const updatedList = [newAnnouncement, ...announcements];
+      
+      await saveDashboardData(null, null, null, updatedList);
+      setAnnouncements(updatedList);
+      setAnnouncementForm(emptyAnnouncement);
+      showAlert("success", "Published", "Announcement submitted.");
+    } catch (error) { showAlert("error", "Error", error.message); } finally { setSaving(false); }
+  };
 
-      const whatsappNumber = "233548099730";
-      const whatsappMessage = encodeURIComponent(
-        result.whatsappCaption ||
-          `🔔 NEW CHURCH WEBSITE ENQUIRY\n\n${enquiry.trim()}\n\n📍 Source: Church Website`
-      );
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const handleSaveExpense = async (event) => {
+    event.preventDefault();
+    try {
+      setSaving(true);
+      const newExpense = { ...expenseForm, id: Date.now().toString(), amount: Number(expenseForm.amount) };
+      const updatedList = [newExpense, ...expenses];
+      
+      await saveDashboardData(null, null, updatedList, null);
+      setExpenses(updatedList);
+      setExpenseForm(emptyExpense);
+      showAlert("success", "Expense Saved", "The expense was submitted.");
+    } catch (error) { showAlert("error", "Error", error.message); } finally { setSaving(false); }
+  };
 
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  const handleToggleAttendance = (memberId) => {
+    setCurrentAttendance((prev) => ({ ...prev, [memberId]: !prev[memberId] }));
+  };
 
-      Swal.fire({
-        icon: "success",
-        title: "Enquiry Sent",
-        text: "The enquiry was sent by email and WhatsApp has been opened with the message ready to send.",
-        confirmButtonColor: "#04732d",
-      });
-
-      setEnquiry("");
-    } catch (error) {
-      console.error("Send enquiry error:", error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Failed to Send",
-        text:
-          error.message ||
-          "Failed to send enquiry. Please try again.",
-        confirmButtonColor: "#d33",
-      });
-    } finally {
-      setSendingEnquiry(false);
+  const handleLoadAttendance = (date) => {
+    setSelectedDate(date);
+    const existingRecord = attendanceData.find((a) => a.date === date);
+    if (existingRecord) {
+      setCurrentAttendance(existingRecord.records || {});
+    } else {
+      setCurrentAttendance({});
     }
+    setAttendanceSearch(""); 
   };
 
-  // ==========================================
-  // FORMAT DATE
-  // ==========================================
-
-  const formatDate = (date) => {
-    if (!date) return "-";
-    return String(date).substring(0, 10);
+  const handleMarkAll = (status) => {
+    const nextRecords = { ...currentAttendance };
+    members.forEach((m) => { nextRecords[m.id] = status; });
+    setCurrentAttendance(nextRecords);
   };
 
-  // ==========================================
-  // RENDER
-  // ==========================================
+  const filteredAttendanceMembers = useMemo(() => {
+    if (!attendanceSearch.trim()) return members;
+    const lowerSearch = attendanceSearch.toLowerCase();
+    return members.filter(
+      (m) => m.fullName.toLowerCase().includes(lowerSearch) || (m.contacts && m.contacts.includes(lowerSearch))
+    );
+  }, [members, attendanceSearch]);
+
+  const presentCount = Object.values(currentAttendance).filter(Boolean).length;
+  const presentMembersList = members.filter((m) => currentAttendance[m.id]);
+  const absentMembersList = members.filter((m) => !currentAttendance[m.id]);
 
   return (
     <div className="members-dashboard">
-      <div className="dashboard-header">
-        <div>
-          <h1>Members Management</h1>
-          <p>View, update and manage church members.</p>
+      <header className="dashboard-header">
+        <div><h1>Church Administration</h1><p>Manage members, attendance, expenses and announcements.</p></div>
+        <div className="backend-status">
+          <span className={backendStatus.includes("Connected") ? "status-connected" : "status-disconnected"}>● {backendStatus}</span>
+          <button type="button" onClick={fetchData}>Refresh</button>
         </div>
+      </header>
 
-        <button
-          className="refresh-btn"
-          onClick={() => {
-            checkHealth();
-            fetchMembers();
-          }}
-        >
-          ↻ Refresh
-        </button>
-      </div>
+      <nav className="dashboard-tabs">
+        {[["members", "Members"], ["attendance", "Weekly Attendance"], ["attendance_history", "History Details"], ["expenses", "Expenses"], ["announcements", "Announcements"]].map(([key, label]) => (
+          <button key={key} type="button" className={activeTab === key ? "active" : ""} onClick={() => { setActiveTab(key); if(key === "attendance_history") setSelectedHistoryRecord(null); }}>
+            {label}
+          </button>
+        ))}
+      </nav>
 
-      {/* ==========================================
-          BACKEND STATUS
-      ========================================== */}
+      {activeTab === "members" && (
+        <section className="dashboard-section">
+          <h2>{editingMember ? "Update Member" : "Register Member"}</h2>
+          
+          <form onSubmit={handleSaveMember} className="dashboard-form">
+            <label>Full Name *</label>
+            <input type="text" name="fullName" value={memberForm.fullName} onChange={(e) => setMemberForm({...memberForm, fullName: e.target.value})} required />
 
-      <section className="dashboard-card health-card">
-        <div className="section-heading">
-          <h2>Backend & Database Status</h2>
-        </div>
+            <label>Role (Optional)</label>
+            <select name="role" value={memberForm.role} onChange={(e) => setMemberForm({...memberForm, role: e.target.value})}>
+              <option value="">Select Role</option>
+              <option value="Member">Member</option>
+              <option value="Leader">Leader</option>
+            </select>
 
-        {loadingHealth ? (
-          <div className="status-loading">
-            Checking backend...
-          </div>
-        ) : backendStatus?.success ? (
-          <div className="health-success">
-            <span className="status-dot"></span>
+            <label>Gender</label>
+            <select name="gender" value={memberForm.gender} onChange={(e) => setMemberForm({...memberForm, gender: e.target.value})}>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
 
-            <div>
-              <strong>Backend Online</strong>
-              <p>{backendStatus.message}</p>
+            <label>Marital Status</label>
+            <select name="maritalStatus" value={memberForm.maritalStatus} onChange={(e) => setMemberForm({...memberForm, maritalStatus: e.target.value})}>
+              <option value="">Select Status</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Divorced">Divorced</option>
+            </select>
 
-              {backendStatus.database && (
-                <small>Database: {backendStatus.database}</small>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="health-error">
-            <span className="status-dot"></span>
+            <label>Contact Number</label>
+            <input type="tel" name="contacts" value={memberForm.contacts} onChange={(e) => setMemberForm({...memberForm, contacts: e.target.value})} />
 
-            <div>
-              <strong>Backend Offline</strong>
-              <p>
-                {backendStatus?.message ||
-                  "Unable to connect to backend."}
-              </p>
-            </div>
-          </div>
-        )}
-      </section>
+            <label>Email (Optional)</label>
+            <input type="email" name="email" value={memberForm.email} onChange={(e) => setMemberForm({...memberForm, email: e.target.value})} />
 
-      {/* ==========================================
-          EDIT FORM
-      ========================================== */}
+            <label>Date of Birth</label>
+            <input type="date" name="dateOfBirth" value={memberForm.dateOfBirth} onChange={(e) => setMemberForm({...memberForm, dateOfBirth: e.target.value})} />
 
-      {selectedMember && (
-        <section className="dashboard-card edit-card">
-          <div className="section-heading">
-            <div>
-              <h2>Edit Member</h2>
-              <p>Member ID: {selectedMember.id}</p>
-            </div>
+            <label>Date of Entry</label>
+            <input type="date" name="dateOfEntry" value={memberForm.dateOfEntry} onChange={(e) => setMemberForm({...memberForm, dateOfEntry: e.target.value})} />
 
-            <button
-              type="button"
-              className="cancel-btn"
-              onClick={handleCancelEdit}
-            >
-              Cancel
-            </button>
-          </div>
+            <label>Location</label>
+            <input type="text" name="location" value={memberForm.location} onChange={(e) => setMemberForm({...memberForm, location: e.target.value})} />
 
-          <form
-            className="member-edit-form"
-            onSubmit={handleUpdate}
-          >
-            <div className="form-group">
-              <label>Full Name</label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="Enter full name"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Gender</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Location</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                placeholder="Enter location"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Date Of Birth</label>
-              <input
-                type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Date Of Entry</label>
-              <input
-                type="date"
-                name="dateOfEntry"
-                value={formData.dateOfEntry}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Contacts</label>
-              <input
-                type="tel"
-                name="contacts"
-                value={formData.contacts}
-                onChange={handleChange}
-                placeholder="Enter contact"
-              />
-            </div>
-
-            <div className="form-group full-width">
-              <label>Remarks</label>
-              <textarea
-                name="remarks"
-                value={formData.remarks}
-                onChange={handleChange}
-                placeholder="Enter remarks"
-                rows="4"
-              />
-            </div>
+            <label>Remarks (Optional)</label>
+            <textarea name="remarks" value={memberForm.remarks} onChange={(e) => setMemberForm({...memberForm, remarks: e.target.value})} rows="2" style={{ gridColumn: '1 / -1' }}></textarea>
 
             <div className="form-actions">
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={handleCancelEdit}
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className="save-btn"
-                disabled={saving}
-              >
-                {saving ? "Updating..." : "Update Member"}
-              </button>
+              <button type="submit" disabled={saving}>{saving ? "Saving..." : "Save Member"}</button>
+              {editingMember && (
+                <button type="button" onClick={() => { setEditingMember(null); setMemberForm(emptyMember); }} style={{ background: '#e2e8f0', color: '#0f172a' }}>
+                  Cancel
+                </button>
+              )}
             </div>
           </form>
-        </section>
-      )}
-
-      {/* ==========================================
-          MEMBERS TABLE
-      ========================================== */}
-
-      <section className="dashboard-card members-card">
-        <div className="section-heading">
-          <div>
-            <h2>Members</h2>
-            <p>
-              Total Members: <strong>{members.length}</strong>
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="refresh-btn"
-            onClick={() => navigate("/FullDetails")}
-          >
-            Add Member
-          </button>
-        </div>
-
-        {loadingMembers ? (
-          <div className="table-message">Loading members...</div>
-        ) : members.length === 0 ? (
-          <div className="table-message">No members found.</div>
-        ) : (
-          <div className="table-wrapper">
-            <table className="members-table">
+          
+          <div className="dashboard-table-wrapper">
+            <table className="dashboard-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Full Name</th>
-                  <th>Gender</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Contact</th>
+                  <th>Email</th>
                   <th>Location</th>
-                  <th>Date Of Birth</th>
-                  <th>Date Of Entry</th>
-                  <th>Contacts</th>
-                  <th>Remarks</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-
               <tbody>
-                {members.map((member) => (
-                  <tr key={member.id}>
-                    <td>{member.id}</td>
-                    <td className="member-name">
-                      {member.fullName || "-"}
+                {members.map(m => (
+                  <tr key={m.id}>
+                    <td style={{ fontWeight: m.role === 'Leader' ? 'bold' : 'normal' }}>
+                      {m.fullName} {m.role === 'Leader' && '⭐'}
                     </td>
-                    <td>{member.gender || "-"}</td>
-                    <td>{member.location || "-"}</td>
-                    <td>{formatDate(member.dateOfBirth)}</td>
-                    <td>{formatDate(member.dateOfEntry)}</td>
-                    <td>{member.contacts || "-"}</td>
-                    <td className="remarks-cell">
-                      {member.remarks || "-"}
-                    </td>
-                    <td>
-                      <div className="action-buttons">
-                        <button
-                          className="edit-btn"
-                          onClick={() => handleEdit(member)}
-                        >
-                          Edit
-                        </button>
-
-                        <button
-                          className="delete-btn"
-                          onClick={() => handleDelete(member.id)}
-                          disabled={deletingId === member.id}
-                        >
-                          {deletingId === member.id
-                            ? "Deleting..."
-                            : "Delete"}
-                        </button>
-                      </div>
+                    <td>{m.role || '—'}</td>
+                    <td>{m.contacts || '—'}</td>
+                    <td>{m.email || '—'}</td>
+                    <td>{m.location || '—'}</td>
+                    <td className="table-actions">
+                      <button onClick={() => { setEditingMember(m.id); setMemberForm(m); }}>Edit</button>
+                      <button onClick={() => handleDeleteMember(m)} className="delete-button">Delete</button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
-      {/* ==========================================
-          ENQUIRY FORM
-      ========================================== */}
-
-      <section className="dashboard-card enquiry-card">
-        <div className="section-heading">
-          <div>
-            <h2>Send Enquiry</h2>
-            <p>
-              Share your candid opinion or ideas to improve
-              church growth.
-            </p>
-          </div>
-        </div>
-
-        <form onSubmit={handleSendEnquiry}>
-          <div className="form-group">
-            <label htmlFor="enquiry">Message</label>
-
-            <textarea
-              id="enquiry"
-              value={enquiry}
-              onChange={(e) => setEnquiry(e.target.value)}
-              placeholder="Enter your enquiry..."
-              rows="5"
-            />
+      {activeTab === "attendance" && (
+        <section className="dashboard-section">
+          <h2>Weekly Attendance Checklist</h2>
+          <div className="attendance-controls">
+            <div>
+              <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#0f172a' }}>Select Service Date</label>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <input type="date" value={selectedDate} onChange={(e) => handleLoadAttendance(e.target.value)} />
+                <button onClick={() => handleLoadAttendance(new Date().toISOString().slice(0, 10))} style={{ padding: '10px 15px', background: '#0f172a', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Reset to Today</button>
+              </div>
+            </div>
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
+               <button type="button" onClick={() => handleMarkAll(true)} style={{ padding: '10px 15px', background: '#e2e8f0', color: '#0f172a', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Mark All Present</button>
+               <button type="button" onClick={() => handleMarkAll(false)} style={{ padding: '10px 15px', background: '#e2e8f0', color: '#0f172a', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Clear All</button>
+            </div>
           </div>
 
-          <button
-            type="submit"
-            className="send-btn"
-            disabled={sendingEnquiry}
-          >
-            {sendingEnquiry ? "Sending..." : "Send Enquiry"}
-          </button>
-        </form>
-      </section>
+          <div className="attendance-layout">
+            <div>
+              <input type="text" placeholder="Search member by name or phone..." value={attendanceSearch} onChange={(e) => setAttendanceSearch(e.target.value)} className="attendance-search" />
+              <div className="attendance-list-container">
+                <table className="dashboard-table attendance-table">
+                  <thead><tr><th>Member Name</th><th>Role</th><th>Contact</th><th>Location</th><th style={{ textAlign: 'center' }}>Status</th></tr></thead>
+                  <tbody>
+                    {filteredAttendanceMembers.map(member => (
+                      <tr key={member.id}>
+                        <td><div style={{ fontWeight: 600 }}>{member.fullName}</div></td>
+                        <td>{member.role === "Leader" ? "⭐ Leader" : (member.role || "Member")}</td>
+                        <td>{member.contacts || "—"}</td>
+                        <td>{member.location || "—"}</td>
+                        <td style={{ textAlign: 'center' }}>
+                          <label className={`attendance-checkbox-label ${currentAttendance[member.id] ? 'is-present' : ''}`}>
+                            <input type="checkbox" className="attendance-checkbox" checked={!!currentAttendance[member.id]} onChange={() => handleToggleAttendance(member.id)} />
+                            <span>{currentAttendance[member.id] ? "Present" : "Absent"}</span>
+                          </label>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <div className="attendance-summary-panel">
+                <h3>Members for Today: {selectedDate}</h3>
+                <div className="summary-stats">
+                  <div><p>Present</p><h4 className="count-present">{presentCount}</h4></div>
+                  <div><p>Absent</p><h4 className="count-absent">{members.length - presentCount}</h4></div>
+                  <div><p>Total</p><h4 className="count-total">{members.length}</h4></div>
+                </div>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                  <button onClick={() => setSummaryView('present')} style={{ flex: 1, padding: '8px', background: summaryView === 'present' ? '#10b981' : '#e2e8f0', color: summaryView === 'present' ? 'white' : '#0f172a', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Present List</button>
+                  <button onClick={() => setSummaryView('absent')} style={{ flex: 1, padding: '8px', background: summaryView === 'absent' ? '#ef4444' : '#e2e8f0', color: summaryView === 'absent' ? 'white' : '#0f172a', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Absent (Follow-up)</button>
+                </div>
+                <div className="attendance-summary-list">
+                  {summaryView === 'present' ? (
+                    presentMembersList.length === 0 ? <p style={{ textAlign: 'center', color: '#94a3b8', fontStyle: 'italic', marginTop: '20px' }}>No members checked in yet.</p> : (
+                      <ul>
+                        {presentMembersList.map(m => (
+                          <li key={m.id}><div style={{ display: 'flex', flexDirection: 'column' }}><span>{m.fullName}</span><span style={{ fontSize: '0.75rem', color: '#64748b' }}>📞 {m.contacts || 'No contact'}</span></div><span>✓</span></li>
+                        ))}
+                      </ul>
+                    )
+                  ) : (
+                    absentMembersList.length === 0 ? <p style={{ textAlign: 'center', color: '#94a3b8', fontStyle: 'italic', marginTop: '20px' }}>All members are present!</p> : (
+                      <ul>
+                        {absentMembersList.map(m => (
+                          <li key={m.id}><div style={{ display: 'flex', flexDirection: 'column' }}><span>{m.fullName}</span><span style={{ fontSize: '0.75rem', color: '#64748b' }}>📞 {m.contacts || 'No contact'}</span></div><span style={{ color: '#ef4444' }}>✗</span></li>
+                        ))}
+                      </ul>
+                    )
+                  )}
+                </div>
+                <button onClick={handleSaveAttendance} disabled={saving} className="submit-attendance-btn">{saving ? "Verifying & Saving..." : "Submit Attendance"}</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {activeTab === "attendance_history" && (
+        <section className="dashboard-section">
+          <h2>Attendance History</h2>
+          
+          {!selectedHistoryRecord ? (
+            <>
+              <p style={{ color: 'var(--muted)', marginBottom: '20px' }}>Select a past service date below to view the detailed attendance record, including who was absent for follow-up.</p>
+              
+              {attendanceData.length === 0 ? (
+                <p className="empty-state-box">No attendance records found.</p>
+              ) : (
+                <div className="dashboard-table-wrapper">
+                  <table className="dashboard-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Total Present</th>
+                        <th>Total Members</th>
+                        <th>Percentage</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {attendanceData.map((record, idx) => (
+                        <tr key={idx}>
+                          <td style={{ fontWeight: 'bold' }}>{record.date}</td>
+                          <td style={{ color: '#10b981', fontWeight: 'bold' }}>{record.totalPresent}</td>
+                          <td>{record.totalMembers}</td>
+                          <td>{Math.round((record.totalPresent / record.totalMembers) * 100)}%</td>
+                          <td>
+                            <button 
+                              className="view-details-btn"
+                              onClick={() => setSelectedHistoryRecord(record)}
+                            >
+                              View Details
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          ) : (
+            <div>
+              <div className="history-header-card">
+                <div>
+                  <h3>Service Date: {selectedHistoryRecord.date}</h3>
+                  <p>
+                    Present: <strong style={{ color: 'var(--success)' }}>{selectedHistoryRecord.totalPresent}</strong> | 
+                    Absent: <strong style={{ color: 'var(--danger)' }}>{selectedHistoryRecord.totalMembers - selectedHistoryRecord.totalPresent}</strong> | 
+                    Total: <strong>{selectedHistoryRecord.totalMembers}</strong>
+                  </p>
+                </div>
+                <button className="back-btn" onClick={() => setSelectedHistoryRecord(null)}>
+                  ← Back to History List
+                </button>
+              </div>
+
+              <div className="history-grid">
+                {/* PRESENT COLUMN */}
+                <div>
+                  <h4 className="history-list-header present">✅ Present Members ({selectedHistoryRecord.totalPresent})</h4>
+                  <div className="dashboard-table-wrapper" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                    <table className="dashboard-table history-table">
+                      <thead><tr><th>Name</th><th>Contact</th></tr></thead>
+                      <tbody>
+                        {members.filter(m => selectedHistoryRecord.records[m.id]).map(m => (
+                          <tr key={m.id}>
+                            <td style={{ fontWeight: 600 }}>{m.fullName}</td>
+                            <td>{m.contacts || '—'}</td>
+                          </tr>
+                        ))}
+                        {members.filter(m => selectedHistoryRecord.records[m.id]).length === 0 && (
+                          <tr><td colSpan="2" style={{ textAlign: 'center', padding: '20px' }}>No members were present.</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* ABSENT COLUMN */}
+                <div>
+                  <h4 className="history-list-header absent">❌ Absent Members ({selectedHistoryRecord.totalMembers - selectedHistoryRecord.totalPresent})</h4>
+                  <div className="dashboard-table-wrapper" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                    <table className="dashboard-table history-table">
+                      <thead><tr><th>Name</th><th>Contact (For Follow-up)</th></tr></thead>
+                      <tbody>
+                        {members.filter(m => !selectedHistoryRecord.records[m.id]).map(m => (
+                          <tr key={m.id}>
+                            <td style={{ fontWeight: 600 }}>{m.fullName}</td>
+                            <td style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{m.contacts || '—'}</td>
+                          </tr>
+                        ))}
+                        {members.filter(m => !selectedHistoryRecord.records[m.id]).length === 0 && (
+                          <tr><td colSpan="2" style={{ textAlign: 'center', padding: '20px' }}>All members were present!</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* UPDATED ANNOUNCEMENTS TAB: Now includes the list of published announcements */}
+      {activeTab === "announcements" && (
+        <section className="dashboard-section">
+          <h2>Create Announcement</h2>
+          <form onSubmit={handleSaveAnnouncement} className="dashboard-form">
+            <input placeholder="Title" value={announcementForm.title} onChange={(e) => setAnnouncementForm({...announcementForm, title: e.target.value})} required />
+            <textarea placeholder="Message" value={announcementForm.message} onChange={(e) => setAnnouncementForm({...announcementForm, message: e.target.value})} required />
+            <div className="form-actions">
+              <button type="submit" disabled={saving}>{saving ? "Publishing..." : "Publish Announcement"}</button>
+            </div>
+          </form>
+
+          <h2 style={{ marginTop: '35px' }}>Published Announcements ({announcements.length})</h2>
+          {announcements.length === 0 ? (
+            <p className="empty-state-box">No announcements published yet.</p>
+          ) : (
+            <div className="announcement-list">
+              {announcements.map((a) => (
+                <article className="announcement-card" key={a.id}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                    <h3 style={{ margin: 0 }}>{a.title}</h3>
+                    <span style={{ fontSize: '12px', color: 'var(--muted)' }}>{a.date}</span>
+                  </div>
+                  <p>{a.message}</p>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
-};
-
-export default MembersDashboard;
+}
