@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ecaf468a-a654-4d11-b7a6-a4d78a71fb22",
+    "title": "Sunday Celebration Service",
+    "message": "Join us this Sunday at 9:00 AM in the Main Sanctuary for a powerful time of worship and the Word.",
+    "author": "Church Admin",
+    "pinned": true,
+    "createdAt": "2026-11-17T23:26:17.134Z"
+  },
+  {
+    "id": "f4b007a2-17ed-4d73-8508-16df0a768669",
+    "title": "Night of Answered Prayers",
+    "message": "Friday 10:00 PM — come with an expectant heart. The altar of answered prayers is open.",
+    "author": "Church Admin",
+    "pinned": false,
+    "createdAt": "2026-11-17T23:26:17.135Z"
+  }
+]

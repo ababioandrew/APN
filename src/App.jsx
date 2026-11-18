@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import {BrowserRouter,Routes,Route,useLocation} from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import MembersDashboard from './components/MembersDashboard';
+import MemberDashboard from './components/MemberDashboard';
+
 import FullDetails from './components/FullDetails.jsx';
 import Meeting from './pages/Meeting';
 
@@ -27,6 +29,7 @@ return (
 <Routes>
 
 <Route path="/" element={<Home />}/>
+<Route path="/member-dashboard" element={<MemberDashboard />} />
 <Route path="/MembersDashboard" element={<MembersDashboard />}/>
 <Route path="/FullDetails" element={<FullDetails />}/>
 <Route path="/about" element={<About />}/>

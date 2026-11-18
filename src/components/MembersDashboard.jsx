@@ -11,6 +11,9 @@ const API = {
   latest: `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`,
 };
 
+// --- BACKEND (for SMS only) ---
+const BACKEND_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 const ADMIN_DELETE_PASSWORD = ".apn";
 
 // --------------------------------------------------
@@ -93,6 +96,7 @@ export default function MembersDashboard() {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [sendingSms, setSendingSms] = useState(false); // NEW
   const [backendStatus, setBackendStatus] = useState("Checking...");
 
   const showAlert = (icon, title, text) => Swal.fire({ icon, title, text, timer: 3000, timerProgressBar: true, showConfirmButton: false });
@@ -183,6 +187,105 @@ export default function MembersDashboard() {
       setMembers(updatedList);
       showAlert("success", "Member Deleted", "Removed from cloud successfully.");
     } catch (error) { showAlert("error", "Delete Failed", error.message); } finally { setSaving(false); }
+  };
+
+  // ⭐ NEW — Delete announcement with .apn password
+  const handleDeleteAnnouncement = async (announcement) => {
+    const confirmation = await Swal.fire({
+      icon: "warning",
+      title: "Delete Announcement?",
+      html: `Are you sure you want to delete <strong>${announcement.title}</strong>?`,
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+    });
+    if (!confirmation.isConfirmed) return;
+
+    const passwordPrompt = await Swal.fire({
+      title: "Admin Password Required",
+      input: "password",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
+    });
+    if (!passwordPrompt.isConfirmed) return;
+    if (passwordPrompt.value !== ADMIN_DELETE_PASSWORD) {
+      return Swal.fire({ icon: "error", title: "Incorrect Password", confirmButtonColor: "#d33" });
+    }
+
+    try {
+      setSaving(true);
+      const updatedList = announcements.filter((a) => a.id !== announcement.id);
+      await saveDashboardData(null, null, null, updatedList);
+      setAnnouncements(updatedList);
+      showAlert("success", "Announcement Deleted", "Removed from cloud successfully.");
+    } catch (error) {
+      showAlert("error", "Delete Failed", error.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // ⭐ NEW — Send SMS to current absentee list (uses backend endpoint)
+  const handleSendAbsenteeSMS = async (absentList, dateISO) => {
+    if (!absentList || absentList.length === 0) {
+      return showAlert("info", "No Absentees", "Everyone is present — nothing to send.");
+    }
+
+    const confirmation = await Swal.fire({
+      icon: "question",
+      title: `Send SMS to ${absentList.length} absent member${absentList.length > 1 ? "s" : ""}?`,
+      html: `This will send an SMS to each absentee for <strong>${dateISO}</strong>.`,
+      showCancelButton: true,
+      confirmButtonColor: "#17365D",
+      confirmButtonText: "Yes, send SMS",
+    });
+    if (!confirmation.isConfirmed) return;
+
+    const passwordPrompt = await Swal.fire({
+      title: "Admin Password Required",
+      input: "password",
+      showCancelButton: true,
+      confirmButtonColor: "#17365D",
+      inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
+    });
+    if (!passwordPrompt.isConfirmed) return;
+
+    try {
+      setSendingSms(true);
+      const res = await fetch(`${BACKEND_URL}/api/send-absentee-sms`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: passwordPrompt.value,
+          date: dateISO,
+          absentees: absentList.map((m) => ({
+            fullName: m.fullName,
+            gender: m.gender,
+            maritalStatus: m.maritalStatus,
+            contacts: m.contacts,
+          })),
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || `Server error (${res.status})`);
+      }
+
+      Swal.fire({
+        icon: data.failed ? "warning" : "success",
+        title: data.failed ? "Partially Sent" : "SMS Sent",
+        html: `<p><strong>${data.sent}</strong> of <strong>${data.requested}</strong> SMS sent successfully.</p>` +
+          (data.failed ? `<p style="color:#b91c1c;">${data.failed} failed — check console for details.</p>` : ""),
+      });
+
+      // eslint-disable-next-line no-console
+      console.table(data.results);
+    } catch (err) {
+      showAlert("error", "SMS Failed", err.message);
+    } finally {
+      setSendingSms(false);
+    }
   };
 
   const handleSaveAttendance = async () => {
@@ -459,6 +562,20 @@ export default function MembersDashboard() {
                     )
                   )}
                 </div>
+
+                {/* ⭐ NEW — Send SMS button, visible only on Absent view */}
+                {summaryView === 'absent' && (
+  <button
+    type="button"
+    className="sms-absentee-btn"
+    onClick={() => handleSendAbsenteeSMS(absentMembersList, selectedDate)}
+    disabled={sendingSms || absentMembersList.length === 0}
+  >
+    {sendingSms
+      ? "Sending SMS..."
+      : `📲 Send SMS to Absentees (${absentMembersList.length})`}
+  </button>
+                )}
                 <button onClick={handleSaveAttendance} disabled={saving} className="submit-attendance-btn">{saving ? "Verifying & Saving..." : "Submit Attendance"}</button>
               </div>
             </div>
@@ -567,6 +684,24 @@ export default function MembersDashboard() {
                       </tbody>
                     </table>
                   </div>
+
+                  {/* ⭐ NEW — SMS button also on history detail */}
+              <button
+                type="button"
+                className="sms-absentee-btn compact"
+                onClick={() =>
+                  handleSendAbsenteeSMS(
+                    members.filter(m => !selectedHistoryRecord.records[m.id]),
+                    selectedHistoryRecord.date
+                  )
+                }
+                disabled={
+                  sendingSms ||
+                  members.filter(m => !selectedHistoryRecord.records[m.id]).length === 0
+                }
+              >
+                {sendingSms ? "Sending SMS..." : "📲 Send SMS to Absentees"}
+              </button>
                 </div>
               </div>
             </div>
@@ -574,7 +709,6 @@ export default function MembersDashboard() {
         </section>
       )}
 
-      {/* UPDATED ANNOUNCEMENTS TAB: Now includes the list of published announcements */}
       {activeTab === "announcements" && (
         <section className="dashboard-section">
           <h2>Create Announcement</h2>
@@ -593,9 +727,30 @@ export default function MembersDashboard() {
             <div className="announcement-list">
               {announcements.map((a) => (
                 <article className="announcement-card" key={a.id}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', gap: '12px' }}>
                     <h3 style={{ margin: 0 }}>{a.title}</h3>
-                    <span style={{ fontSize: '12px', color: 'var(--muted)' }}>{a.date}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--muted)' }}>{a.date}</span>
+
+                      {/* ⭐ NEW — Delete button (password protected) */}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteAnnouncement(a)}
+                        disabled={saving}
+                        style={{
+                          background: 'transparent',
+                          border: '2px solid #dc2626',
+                          color: '#dc2626',
+                          borderRadius: '6px',
+                          padding: '4px 10px',
+                          fontWeight: 'bold',
+                          cursor: saving ? 'not-allowed' : 'pointer',
+                          fontSize: '12px',
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                   <p>{a.message}</p>
                 </article>

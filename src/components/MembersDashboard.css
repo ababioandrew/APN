@@ -908,3 +908,122 @@
   border: 1px dashed #cbd5e1;
   color: var(--muted);
 }
+
+/* =========================================
+   ANNOUNCEMENT CARD — DELETE ACTION
+========================================= */
+
+.announcement-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.announcement-card-header h3 {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.announcement-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.announcement-meta .announcement-date {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.announcement-delete-btn {
+  padding: 6px 12px;
+  background: #ffe8e9;
+  color: #c62836;
+  border: 1px solid #ffcdd1;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.announcement-delete-btn:hover:not(:disabled) {
+  background: #ffd0d3;
+}
+
+.announcement-delete-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   ATTENDANCE — SMS FOLLOW-UP BUTTON
+========================================= */
+
+.sms-absentee-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: #142d4e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 6px rgba(20, 45, 78, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sms-absentee-btn:hover:not(:disabled) {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(20, 45, 78, 0.28);
+}
+
+.sms-absentee-btn:disabled {
+  background: #94a3b8;
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* Slightly tighter version for the history column */
+.sms-absentee-btn.compact {
+  margin-top: 14px;
+  padding: 11px 14px;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   MOBILE — ANNONCEMENT HEADER WRAP
+========================================= */
+
+@media (max-width: 600px) {
+  .announcement-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .announcement-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .sms-absentee-btn {
+    font-size: 0.9rem;
+    padding: 12px 12px;
+  }
+}

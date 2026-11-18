@@ -1,0 +1,37 @@
+[
+  {
+    "id": "m-001",
+    "title": "Mr",
+    "name": "Kwame Mensah",
+    "phone": "0541215212",
+    "gender": "male"
+  },
+  {
+    "id": "m-002",
+    "title": "Mrs",
+    "name": "Akosua Boateng",
+    "phone": "0207464426",
+    "gender": "female"
+  },
+  {
+    "id": "m-003",
+    "title": "Miss",
+    "name": "Adjoa Serwaa",
+    "phone": "0244000111",
+    "gender": "female"
+  },
+  {
+    "id": "m-004",
+    "title": "Mr",
+    "name": "Yaw Owusu",
+    "phone": "0555000222",
+    "gender": "male"
+  },
+  {
+    "id": "m-005",
+    "title": "Mrs",
+    "name": "Esi Danso",
+    "phone": "0266000333",
+    "gender": "female"
+  }
+]
