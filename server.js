@@ -11,11 +11,6 @@ import { fileURLToPath } from "url";
 dotenv.config();
 
 const app = express();
-
-// =====================================================
-// REQUIRED ENV VARS
-// =====================================================
-
 const requiredEnv = ["EMAIL_USER", "EMAIL_PASS", "ENQUIRY_EMAIL"];
 
 for (const key of requiredEnv) {
@@ -23,10 +18,6 @@ for (const key of requiredEnv) {
     console.error(`⚠️  Missing environment variable: ${key}`);
   }
 }
-
-// =====================================================
-// MIDDLEWARE
-// =====================================================
 
 app.use(
   cors({
@@ -36,10 +27,6 @@ app.use(
 );
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-
-// =====================================================
-// EMAIL TRANSPORTER
-// =====================================================
 
 let transporter = null;
 
@@ -60,12 +47,7 @@ try {
   console.error("❌ Email configuration error:", error.message);
 }
 
-// =====================================================
-// ADMIN PASSWORD + STORAGE
-// =====================================================
-
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || ".apn";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "data");
@@ -74,8 +56,7 @@ const seedAnnouncements = [
   {
     id: crypto.randomUUID(),
     title: "Sunday Celebration Service",
-    message:
-      "Join us this Sunday at 9:00 AM in the Main Sanctuary for a powerful time of worship and the Word.",
+    message: "Join us this Sunday at 9:00 AM in the Main Sanctuary for a powerful time of worship and the Word.",
     author: "Church Admin",
     pinned: true,
     createdAt: new Date().toISOString(),
@@ -99,13 +80,10 @@ const seedMembers = [
   { id: "m-005", title: "Mrs",  name: "Esi Danso",      phone: "0266000333", gender: "female" },
 ];
 
-// In-memory source of truth. Best-effort disk persistence so it
-// survives restarts locally; on Vercel serverless it silently falls
-// back to memory (swap in Vercel KV / Postgres for real persistence).
 const memStore = {
   announcements: seedAnnouncements,
   members: seedMembers,
-  attendance: {}, // { "YYYY-MM-DD": ["m-001", ...] }
+  attendance: {}
 };
 
 const ensureDir = () => {
@@ -141,18 +119,12 @@ const persist = (key) => {
       JSON.stringify(memStore[key], null, 2)
     );
   } catch {
-    /* memory-only fallback */
   }
 };
-
 loadFromDisk();
 
-// =====================================================
-// HELPERS — DATES, MESSAGES, SMS
-// =====================================================
 
 const pad2 = (n) => String(n).padStart(2, "0");
-
 const todayISO = () => {
   const d = new Date();
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
@@ -171,16 +143,20 @@ const formatChurchDate = (isoDate) => {
 
 const buildAbsenceMessage = (member, isoDate) => {
   const title = member.title || (member.gender === "female" ? "Miss" : "Mr");
+  const name = member.name || member.fullName || "Member"; 
   const dateText = formatChurchDate(isoDate);
-  return (
-    `Greetings ${title} ${member.name}, This is Answered Prayer Network. ` +
-    `We will like to check up on you since you didn't or were not able to ` +
-    `come to church on ${dateText}. We wish to see you soon. ` +
-    `God richly bless you. #APN.`
-  );
+
+const templates = [
+`Greetings ${title} ${name}, This is Answered Prayer Network. We will like to check up on you since you didn't or were not able to come to church on ${dateText}. We wish to see you soon. God richly bless you. #APN.`,
+`Hello ${title} ${name}, we missed you at Answered Prayer Network on ${dateText}! We hope you are doing well. Looking forward to seeing you soon. Stay blessed. #APN.`,
+`Peace be with you ${title} ${name}. Answered Prayer Network noticed your absence on ${dateText}. We are praying for you and hope all is well. See you in the next service! #APN.`,
+`Hi ${title} ${name}, Answered Prayer Network here. We missed your presence at church on ${dateText}. Is everything okay? We are here for you. God bless you. #APN.`,
+`Greetings ${title} ${name}, we missed you on ${dateText} at Answered Prayer Network. "Let us not give up meeting together... but let us encourage one another." (Hebrews 10:25). Hope to see you soon! #APN.`
+];
+const randomIndex = Math.floor(Math.random() * templates.length);
+return templates[randomIndex];
 };
 
-/** 0541215212 -> 233541215212 (Ghana) */
 const normalizePhone = (raw) => {
   if (!raw) return "";
   const digits = String(raw).replace(/\D/g, "");
@@ -189,20 +165,14 @@ const normalizePhone = (raw) => {
   return digits;
 };
 
-/**
- * SMS sender — Arkesel v2 by default (Ghana).
- * Override via env: SMS_API_URL, SMS_API_KEY, SMS_SENDER_ID.
- * Without SMS_API_KEY it just logs to the console (dev mode).
- */
 async function sendSms({ to, message }) {
   const recipient = normalizePhone(to);
-  const apiKey = process.env.SMS_API_KEY;
-  const sender = process.env.SMS_SENDER_ID || "APN";
-  const endpoint = process.env.SMS_API_URL || "https://sms.arkesel.com/api/v2/sms/send";
+  const token = process.env.SMS_API_TOKEN || process.env.SMS_API_KEY; 
+  const senderId = process.env.SMS_SENDER_ID || "APN";
+  const endpoint = process.env.SMS_API_URL || "https://api.xxxxxxxxxxxxxxxxxxxxxx/";
 
   if (!recipient) return { success: false, to, error: "Missing phone number" };
-
-  if (!apiKey) {
+  if (!token) {
     console.log(`\n[SMS:DEV] to=${recipient}\n           ${message}\n`);
     return { success: true, dev: true, to: recipient };
   }
@@ -210,9 +180,17 @@ async function sendSms({ to, message }) {
   try {
     const res = await fetch(endpoint, {
       method: "POST",
-      headers: { "api-key": apiKey, "Content-Type": "application/json" },
-      body: JSON.stringify({ sender, message, recipients: [recipient] }),
+      headers: { 
+        authorization: `Bearer ${token}`, 
+        "content-type": "application/json" 
+      },
+      body: JSON.stringify({ 
+        senderId: senderId, 
+        contacts: [recipient], 
+        message 
+      }),
     });
+    
     const data = await res.json().catch(() => ({}));
     return { success: res.ok, status: res.status, to: recipient, data };
   } catch (err) {
@@ -220,7 +198,6 @@ async function sendSms({ to, message }) {
   }
 }
 
-/** Route guard: x-admin-password header OR body.password OR ?password */
 function requireAdmin(req, res, next) {
   const supplied =
     req.headers["x-admin-password"] ||
@@ -235,10 +212,6 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// =====================================================
-// HEALTH CHECK
-// =====================================================
-
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
@@ -248,10 +221,6 @@ app.get("/api/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-
-// =====================================================
-// SEND ENQUIRY EMAIL  (unchanged)
-// =====================================================
 
 const escapeHtml = (value = "") =>
   String(value)
@@ -264,7 +233,6 @@ const escapeHtml = (value = "") =>
 app.post("/api/send-enquiry", async (req, res) => {
   try {
     const { message, whatsappCaption } = req.body;
-
     if (!message?.trim()) {
       return res.status(400).json({
         success: false,
@@ -312,10 +280,6 @@ app.post("/api/send-enquiry", async (req, res) => {
     });
   }
 });
-
-// =====================================================
-// ANNOUNCEMENTS
-// =====================================================
 
 app.get("/api/announcements", (_req, res) => {
   const sorted = [...memStore.announcements].sort((a, b) => {
@@ -369,7 +333,6 @@ app.put("/api/announcements/:id", requireAdmin, (req, res) => {
   res.json({ success: true, announcement: memStore.announcements[idx] });
 });
 
-// ⭐ Admin DELETE — password ".apn"
 app.delete("/api/announcements/:id", requireAdmin, (req, res) => {
   const idx = memStore.announcements.findIndex((a) => a.id === req.params.id);
   if (idx === -1) {
@@ -379,10 +342,6 @@ app.delete("/api/announcements/:id", requireAdmin, (req, res) => {
   persist("announcements");
   res.json({ success: true, message: "Announcement deleted", deleted: removed });
 });
-
-// =====================================================
-// MEMBERS
-// =====================================================
 
 app.get("/api/members", (_req, res) => {
   res.json({ success: true, members: memStore.members });
@@ -415,10 +374,6 @@ app.delete("/api/members/:id", requireAdmin, (req, res) => {
   res.json({ success: true, deleted: removed });
 });
 
-// =====================================================
-// ATTENDANCE
-// =====================================================
-
 app.get("/api/attendance", (req, res) => {
   const date = req.query.date || todayISO();
   res.json({
@@ -446,10 +401,6 @@ app.get("/api/absentees", (req, res) => {
   res.json({ success: true, date, absentees });
 });
 
-// =====================================================
-// SMS FOLLOW-UP
-// =====================================================
-
 app.post("/api/sms/preview", (req, res) => {
   const { date, memberIds } = req.body || {};
   const day = date || todayISO();
@@ -476,52 +427,50 @@ app.post("/api/sms/preview", (req, res) => {
 });
 
 app.post("/api/sms/send-absentees", requireAdmin, async (req, res) => {
-  const { date, memberIds } = req.body || {};
+  const { date, absentees } = req.body || {};
   const day = date || todayISO();
-  const present = new Set(memStore.attendance[day] || []);
-  const pool = Array.isArray(memberIds) && memberIds.length
-    ? memStore.members.filter((m) => memberIds.includes(m.id))
-    : memStore.members.filter((m) => !present.has(m.id));
 
-  if (!pool.length) {
+  if (!absentees || !Array.isArray(absentees) || absentees.length === 0) {
     return res.json({
       success: true, date: day, sent: 0, results: [],
-      message: "Nobody is absent 🎉",
+      message: "No absentees provided 🎉",
     });
   }
 
   const results = [];
-  for (const member of pool) {
-    // eslint-disable-next-line no-await-in-loop
-    const result = await sendSms({
-      to: member.phone,
-      message: buildAbsenceMessage(member, day),
-    });
+  
+  for (const member of absentees) {
+    // Map Frontend fields (fullName, contacts) to Backend expectations
+    const name = member.fullName || member.name || "Member";
+    const phone = member.contacts || member.phone || "";
+    const title = member.gender === "female" ? "Miss" : "Mr";
+    
+    const tempMember = { name, title, gender: member.gender };
+    const message = buildAbsenceMessage(tempMember, day);
+    const result = await sendSms({ to: phone, message });
+    
     results.push({
-      memberId: member.id,
-      name: member.name,
-      phone: member.phone,
+      memberId: member.id || Date.now().toString(),
+      name: name,
+      phone: phone,
       ...result,
     });
-    // eslint-disable-next-line no-await-in-loop
-    await new Promise((r) => setTimeout(r, 250)); // provider rate-limit friendly
+
+    await new Promise((r) => setTimeout(r, 250)); 
   }
 
   const sent = results.filter((r) => r.success).length;
+  
   res.json({
     success: true,
     date: day,
     dateText: formatChurchDate(day),
-    requested: pool.length,
+    requested: absentees.length,
     sent,
-    failed: pool.length - sent,
+    failed: absentees.length - sent,
     results,
   });
 });
-
-// =====================================================
-// 404 + ERROR HANDLERS
-// =====================================================
 
 app.use((req, res) => {
   res.status(404).json({
@@ -539,10 +488,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-// =====================================================
-// LOCAL DEV SERVER
-// =====================================================
-
 const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV !== "production") {
@@ -550,9 +495,5 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`✅ Church site backend on http://localhost:${PORT}`);
   });
 }
-
-// =====================================================
-// EXPORT FOR VERCEL
-// =====================================================
 
 export default app;

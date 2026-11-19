@@ -1,6 +1,11 @@
-// src/services/api.js
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
+try {
+  const { data } = await axios.request(options);
+  console.log(data);
+} catch (error) {
+  console.error(error);
+}
 
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const request = async (path, options = {}) => {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },

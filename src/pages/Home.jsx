@@ -12,7 +12,7 @@ FaBible,
 FaTimesCircle,
 FaBullhorn,
 } from 'react-icons/fa';
-
+import Swal from "sweetalert2";
 import AnnouncementBoard from '../components/AnnouncementBoard';
 import Footer from '../components/Footer';
 import BirthdayCelebrants from '../components/BirthdayCelebrants'; 
@@ -30,9 +30,9 @@ import commercialVid4 from '../assets/videos/commercial.mp4';
 import commercialVid5 from '../assets/videos/commercial.mp4';
 import commercialVid6 from '../assets/videos/commercial.mp4';
 import commercialVid7 from '../assets/videos/commercial.mp4';
+import supportContact from '../assets/images/supportContact.jpeg';
 
 import APNIcon from '../icons/APN.png';
-
 import apnImage1 from '../assets/images/apnImage1.png';
 import apnImage2 from '../assets/images/apnImage2.png';
 import apnImage3 from '../assets/images/apnImage3.png';
@@ -1543,9 +1543,11 @@ const testimonials = [
 ];
 
 const givingOptions = [
-{ icon: '📱', name: 'MTN Mobile Money', number: '+233 541215212', holder: 'Answered Prayer Network' },
-{ icon: '📱', name: 'Vodafone Cash', number: '+233 207464426', holder: 'Answered Prayer Network' },
-{ icon: '🏦', name: 'Bank Transfer', number: 'GCB • 1234567890', holder: 'Answered Prayer Network' },
+// { icon: '📱', name: 'MTN Mobile Money', number: '+233 541215212', holder: 'Answered Prayer Network' },
+// { icon: '📱', name: 'Vodafone Cash', number: '+233 207464426', holder: 'Answered Prayer Network' },
+// { icon: '🏦', name: 'Bank Transfer', number: 'GCB • 1234567890', holder: 'Answered Prayer Network' },
+
+{ type: 'image', src: supportContact,  alt: 'Support 1',  title: 'Support 1'  }
 ];
 
 const leadershipTeam = [
@@ -2281,29 +2283,32 @@ return (
 <button className="modal-close" onClick={() => setShowGiveModal(false)}>
 <FaTimesCircle />
 </button>
-<h2 className="modal-title">Give & Support</h2>
-<p className="modal-desc">
-Your generosity helps us spread the Gospel and serve our community.
-</p>
 
+<h4 className="modal-title">Give & Support</h4>
+<p className="modal-desc">Your generosity helps us spread the Gospel and serve our community.</p>
 <div className="give-number-box">
-<span className="give-label">Send to Mobile Money / WhatsApp:</span>
-<strong className="give-number">233 54 121 5212</strong>
+  <span className="give-label">Send to Mobile Money / WhatsApp</span>
+  <strong className="give-number">0541215212 / 0207464426</strong>
 </div>
-
-<p className="give-notice">
-"You can send to 233 54 121 5212. Kindly add a reference. God bless you!"
-</p>
+<p className="give-notice">"You can send to 0541215212. Kindly add a reference. God bless you!"</p>
 
 <button
-className="copy-number-btn"
-onClick={() => {
-navigator.clipboard.writeText('233541215212');
-alert('Phone number copied to clipboard!');
-}}
->
-📋 Copy Number
+  className="copy-number-btn"
+  onClick={() => {
+    navigator.clipboard.writeText('0541215212');
+    Swal.fire({
+      icon: 'success',
+      title: 'Copied Successfully!',
+      text: 'Phone number copied to clipboard!',
+      timer: 3000, 
+      timerProgressBar: true,
+      showConfirmButton: true, 
+      confirmButtonColor: '#17365D'
+    });
+  }}
+>📋 Copy Number
 </button>
+
 </div>
 </div>
 )}
@@ -3038,36 +3043,60 @@ We would love to welcome you and your family. Come as you are and experience a c
 </section>
 
 {/* ONLINE GIVING */}
-<section style={{ padding: '70px 20px', background: '#F8FAFC' }}>
-<div style={{ maxWidth: 1100, margin: '0 auto' }}>
-<div style={{ textAlign: 'center', marginBottom: 40 }}>
-<p className="section-eyebrow">Give With Joy</p>
-<h2 style={{ color: '#0F172A', fontSize: '2rem', fontFamily: "'Playfair Display', serif", margin: '10px 0' }}>
-Support the Ministry
-</h2>
-<span className="gold-rule centered" />
-<p style={{ color: '#64748B', maxWidth: 600, margin: '20px auto 0' }}>
-Your giving fuels the Gospel, outreach, and answered prayers across our community.
-</p>
-</div>
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 20 }}>
-{givingOptions.map((g) => (
-<div key={g.name} style={{ background: '#fff', padding: 24, borderRadius: 12, border: '1px solid #E2E8F0', textAlign: 'center' }}>
-<div style={{ fontSize: 34, marginBottom: 8 }}>{g.icon}</div>
-<h3 style={{ color: '#0F172A', fontSize: '1.05rem', marginBottom: 8 }}>{g.name}</h3>
-<p style={{ color: '#C49A3A', fontWeight: 800, margin: 0, fontSize: '1rem' }}>{g.number}</p>
-<p style={{ color: '#64748B', fontSize: 12, margin: '4px 0 0' }}>{g.holder}</p>
-</div>
-))}
-</div>
-<p style={{ textAlign: 'center', color: '#64748B', fontSize: 13, marginTop: 30 }}>
-Every gift, big or small, advances the Kingdom. Thank you for your generosity. 💛
-</p>
-</div>
+{/* ================================================= */}
+{/* GIVING / SUPPORT CONTACT SECTION                  */}
+{/* ================================================= */}
+<section
+  style={{
+    width: '100%',
+    margin: 0,
+    padding: '0 20px 48px',
+    background: '#F8FAFC',
+    boxSizing: 'border-box',
+  }}
+>
+  {/* Title */}
+  <div style={{ textAlign: 'center', padding: '40px 20px 24px' }}>
+    <h2 style={{ ...sectionTitleStyle, display: 'inline-block', margin: 0 }}>
+      Support the Ministry
+    </h2>
+  </div>
+
+  {/* Image — wider container */}
+  <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+    {givingOptions.map((opt, i) => (
+      <div key={i} style={{ width: '100%' }}>
+        {opt.type === 'image' ? (
+          <img
+            src={opt.src}
+            alt={opt.alt}
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '1700px',
+              objectFit: 'cover',
+              display: 'block',
+              margin: 0,
+              borderRadius: '12px',
+              boxShadow: '0 6px 20px rgba(15, 23, 42, 0.08)',
+            }}
+          />
+        ) : (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <span style={{ fontSize: '2rem' }}>{opt.icon}</span>
+            <h3>{opt.name}</h3>
+            <p>{opt.number}</p>
+            <p>{opt.holder}</p>
+          </div>
+        )}
+      </div>
+    ))}
+    
+  </div>
+  
 </section>
-
+      
 <FirstVisitFAQ />
-
 {/* NEWSLETTER */}
 <section style={{ padding: '70px 20px', background: '#fff', textAlign: 'center' }}>
 <div style={{ maxWidth: 600, margin: '0 auto' }}>
@@ -3221,9 +3250,7 @@ fontFamily: "'Playfair Display', serif",
 </p>
 </div>
 </section>
-
-<Footer />
-
+  <Footer />
 {/* FLOATING BUTTONS - Correctly Stacked */}
 <button
 className="give-icon"

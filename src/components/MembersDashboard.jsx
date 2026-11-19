@@ -189,7 +189,7 @@ export default function MembersDashboard() {
     } catch (error) { showAlert("error", "Delete Failed", error.message); } finally { setSaving(false); }
   };
 
-  // ⭐ NEW — Delete announcement with .apn password
+  // ⭐ Delete announcement with .apn password
   const handleDeleteAnnouncement = async (announcement) => {
     const confirmation = await Swal.fire({
       icon: "warning",
@@ -225,19 +225,19 @@ export default function MembersDashboard() {
     }
   };
 
-  // ⭐ NEW — Send SMS to current absentee list (uses backend endpoint)
-  const handleSendAbsenteeSMS = async (absentList, dateISO) => {
-    if (!absentList || absentList.length === 0) {
-      return showAlert("info", "No Absentees", "Everyone is present — nothing to send.");
-    }
-
+  // ⭐ NEW — Delete attendance history record with .apn password
+  const handleDeleteHistory = async (record) => {
     const confirmation = await Swal.fire({
-      icon: "question",
-      title: `Send SMS to ${absentList.length} absent member${absentList.length > 1 ? "s" : ""}?`,
-      html: `This will send an SMS to each absentee for <strong>${dateISO}</strong>.`,
+      icon: "warning",
+      title: "Delete Attendance Record?",
+      html: `Are you sure you want to delete the attendance record for <strong>${record.date}</strong>?<br/><br/>
+             <span style="color:#b91c1c;font-size:0.9rem;">
+               This will permanently remove ${record.totalPresent} present / 
+               ${record.totalMembers - record.totalPresent} absent records.
+             </span>`,
       showCancelButton: true,
-      confirmButtonColor: "#17365D",
-      confirmButtonText: "Yes, send SMS",
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it",
     });
     if (!confirmation.isConfirmed) return;
 
@@ -245,48 +245,114 @@ export default function MembersDashboard() {
       title: "Admin Password Required",
       input: "password",
       showCancelButton: true,
-      confirmButtonColor: "#17365D",
-      inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
+      confirmButtonColor: "#d33",
+      inputValidator: (value) =>
+        !value || !value.trim() ? "Password cannot be empty." : null,
     });
     if (!passwordPrompt.isConfirmed) return;
 
-    try {
-      setSendingSms(true);
-      const res = await fetch(`${BACKEND_URL}/api/send-absentee-sms`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          password: passwordPrompt.value,
-          date: dateISO,
-          absentees: absentList.map((m) => ({
-            fullName: m.fullName,
-            gender: m.gender,
-            maritalStatus: m.maritalStatus,
-            contacts: m.contacts,
-          })),
-        }),
+    if (passwordPrompt.value !== ADMIN_DELETE_PASSWORD) {
+      return Swal.fire({
+        icon: "error",
+        title: "Incorrect Password",
+        confirmButtonColor: "#d33",
       });
+    }
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || `Server error (${res.status})`);
+    try {
+      setSaving(true);
+      const updatedAttendance = attendanceData.filter(
+        (a) => a.date !== record.date
+      );
+      await saveDashboardData(null, updatedAttendance, null, null);
+      setAttendanceData(updatedAttendance);
+
+      // If we were viewing this record, go back to the list
+      if (selectedHistoryRecord?.date === record.date) {
+        setSelectedHistoryRecord(null);
       }
 
-      Swal.fire({
-        icon: data.failed ? "warning" : "success",
-        title: data.failed ? "Partially Sent" : "SMS Sent",
-        html: `<p><strong>${data.sent}</strong> of <strong>${data.requested}</strong> SMS sent successfully.</p>` +
-          (data.failed ? `<p style="color:#b91c1c;">${data.failed} failed — check console for details.</p>` : ""),
-      });
-
-      // eslint-disable-next-line no-console
-      console.table(data.results);
-    } catch (err) {
-      showAlert("error", "SMS Failed", err.message);
+      showAlert(
+        "success",
+        "Record Deleted",
+        `Attendance for ${record.date} has been removed.`
+      );
+    } catch (error) {
+      showAlert("error", "Delete Failed", error.message);
     } finally {
-      setSendingSms(false);
+      setSaving(false);
     }
   };
+
+ const handleSendAbsenteeSMS = async (absentList, dateISO) => {
+if (!absentList || absentList.length === 0) {
+return showAlert("info", "No Absentees", "Everyone is present — nothing to send.");
+}
+
+const confirmation = await Swal.fire({
+icon: "question",
+title: `Send SMS to ${absentList.length} absent member${absentList.length > 1 ? "s" : ""}?`,
+html: `This will send an SMS to each absentee for <strong>${dateISO}</strong>.`,
+showCancelButton: true,
+confirmButtonColor: "#17365D",
+confirmButtonText: "Yes, send SMS",
+});
+if (!confirmation.isConfirmed) return;
+
+const passwordPrompt = await Swal.fire({
+title: "Admin Password Required",
+input: "password",
+showCancelButton: true,
+confirmButtonColor: "#17365D",
+inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
+});
+if (!passwordPrompt.isConfirmed) return;
+
+try {
+setSendingSms(true);
+const res = await fetch(`${BACKEND_URL}/api/sms/send-absentees`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    password: passwordPrompt.value,
+    date: dateISO,
+    absentees: absentList.map((m) => ({
+      fullName: m.fullName,
+      gender: m.gender,
+      maritalStatus: m.maritalStatus,
+      contacts: m.contacts,
+    })),
+  }),
+});
+
+const data = await res.json().catch(() => ({}));
+if (!res.ok || !data.success) {
+throw new Error(data.message || `Server error (${res.status})`);
+}
+
+Swal.fire({
+icon: data.failed ? "warning" : "success",
+title: data.failed ? "Partially Sent" : "SMS Sent",
+html: `<p><strong>${data.sent}</strong> of <strong>${data.requested}</strong> SMS sent successfully.</p>` +
+(data.failed ? `<p style="color:#b91c1c;">${data.failed} failed — check console for details.</p>` : ""),
+});
+
+console.table(data.results);
+} catch (err) {
+if (err.message && err.message.includes("Insufficient SMS credits")) {
+Swal.fire({
+icon: "error",
+title: "Insufficient SMS Credits",
+text: "Insufficient SMS credits please recharge to continue",
+confirmButtonColor: "#d33",
+});
+} else {
+showAlert("error", "SMS Failed", err.message);
+}
+} finally {
+setSendingSms(false);
+}
+} 
 
   const handleSaveAttendance = async () => {
     try {
@@ -563,18 +629,18 @@ export default function MembersDashboard() {
                   )}
                 </div>
 
-                {/* ⭐ NEW — Send SMS button, visible only on Absent view */}
+                {/* ⭐ Send SMS button, visible only on Absent view */}
                 {summaryView === 'absent' && (
-  <button
-    type="button"
-    className="sms-absentee-btn"
-    onClick={() => handleSendAbsenteeSMS(absentMembersList, selectedDate)}
-    disabled={sendingSms || absentMembersList.length === 0}
-  >
-    {sendingSms
-      ? "Sending SMS..."
-      : `📲 Send SMS to Absentees (${absentMembersList.length})`}
-  </button>
+                  <button
+                    type="button"
+                    className="sms-absentee-btn"
+                    onClick={() => handleSendAbsenteeSMS(absentMembersList, selectedDate)}
+                    disabled={sendingSms || absentMembersList.length === 0}
+                  >
+                    {sendingSms
+                      ? "Sending SMS..."
+                      : `📲 Send SMS to Absentees (${absentMembersList.length})`}
+                  </button>
                 )}
                 <button onClick={handleSaveAttendance} disabled={saving} className="submit-attendance-btn">{saving ? "Verifying & Saving..." : "Submit Attendance"}</button>
               </div>
@@ -613,12 +679,21 @@ export default function MembersDashboard() {
                           <td>{record.totalMembers}</td>
                           <td>{Math.round((record.totalPresent / record.totalMembers) * 100)}%</td>
                           <td>
-                            <button 
-                              className="view-details-btn"
-                              onClick={() => setSelectedHistoryRecord(record)}
-                            >
-                              View Details
-                            </button>
+                            <div className="history-action-buttons">
+                              <button 
+                                className="view-details-btn"
+                                onClick={() => setSelectedHistoryRecord(record)}
+                              >
+                                View Details
+                              </button>
+                              <button
+                                className="delete-history-btn"
+                                onClick={() => handleDeleteHistory(record)}
+                                disabled={saving}
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -685,23 +760,23 @@ export default function MembersDashboard() {
                     </table>
                   </div>
 
-                  {/* ⭐ NEW — SMS button also on history detail */}
-              <button
-                type="button"
-                className="sms-absentee-btn compact"
-                onClick={() =>
-                  handleSendAbsenteeSMS(
-                    members.filter(m => !selectedHistoryRecord.records[m.id]),
-                    selectedHistoryRecord.date
-                  )
-                }
-                disabled={
-                  sendingSms ||
-                  members.filter(m => !selectedHistoryRecord.records[m.id]).length === 0
-                }
-              >
-                {sendingSms ? "Sending SMS..." : "📲 Send SMS to Absentees"}
-              </button>
+                  {/* ⭐ SMS button also on history detail */}
+                  <button
+                    type="button"
+                    className="sms-absentee-btn compact"
+                    onClick={() =>
+                      handleSendAbsenteeSMS(
+                        members.filter(m => !selectedHistoryRecord.records[m.id]),
+                        selectedHistoryRecord.date
+                      )
+                    }
+                    disabled={
+                      sendingSms ||
+                      members.filter(m => !selectedHistoryRecord.records[m.id]).length === 0
+                    }
+                  >
+                    {sendingSms ? "Sending SMS..." : "📲 Send SMS to Absentees"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -732,7 +807,7 @@ export default function MembersDashboard() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <span style={{ fontSize: '12px', color: 'var(--muted)' }}>{a.date}</span>
 
-                      {/* ⭐ NEW — Delete button (password protected) */}
+                      {/* ⭐ Delete button (password protected) */}
                       <button
                         type="button"
                         onClick={() => handleDeleteAnnouncement(a)}

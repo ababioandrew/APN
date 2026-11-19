@@ -59,7 +59,7 @@ export default function About() {
       ================================== */}
       <PageHeader
         label="About Us"
-        title="Answered Prayer Network — Built On Faith, Love & Community"
+        title="Answered Prayer Network — Where Destinies Are Restored and Rearranged."
         subtitle="We are a community of believers committed to knowing Christ, growing together, serving others, and sharing the hope of the Gospel."
         bg="https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1600&q=85"
       />
