@@ -169,9 +169,9 @@ const normalizePhone = (raw) => {
 
 async function sendSms({ to, message }) {
   const recipient = normalizePhone(to);
-  const token = process.env.SMS_API_TOKEN || process.env.SMS_API_KEY; 
-  const senderId = process.env.SMS_SENDER_ID || "APN";
-  const endpoint = process.env.SMS_API_URL
+  const endpoint = "https://api.fasthosttech.com/fastapi/v1/send-sms/";
+  const token = "ad7f314d2725f7709692a8a5ce312913665f5de0e070c6cb2ba7ecc5906dc69d";
+  const senderId = "APN";
 
   if (!recipient) return { success: false, to, error: "Missing phone number" };
   if (!token) {
