@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
-
+import axios from "axios";
 dotenv.config();
 
 const app = express();
@@ -146,15 +146,17 @@ const buildAbsenceMessage = (member, isoDate) => {
   const name = member.name || member.fullName || "Member"; 
   const dateText = formatChurchDate(isoDate);
 
-const templates = [
-`Greetings ${title} ${name}, This is Answered Prayer Network. We will like to check up on you since you didn't or were not able to come to church on ${dateText}. We wish to see you soon. God richly bless you. #APN.`,
-`Hello ${title} ${name}, we missed you at Answered Prayer Network on ${dateText}! We hope you are doing well. Looking forward to seeing you soon. Stay blessed. #APN.`,
-`Peace be with you ${title} ${name}. Answered Prayer Network noticed your absence on ${dateText}. We are praying for you and hope all is well. See you in the next service! #APN.`,
-`Hi ${title} ${name}, Answered Prayer Network here. We missed your presence at church on ${dateText}. Is everything okay? We are here for you. God bless you. #APN.`,
-`Greetings ${title} ${name}, we missed you on ${dateText} at Answered Prayer Network. "Let us not give up meeting together... but let us encourage one another." (Hebrews 10:25). Hope to see you soon! #APN.`
-];
-const randomIndex = Math.floor(Math.random() * templates.length);
-return templates[randomIndex];
+  const templates = [
+    `Greetings ${title} ${name}, This is Answered Prayer Network. We will like to check up on you since you didn't or were not able to come to church on ${dateText}. We wish to see you soon. God richly bless you. #APN.`,
+    `Hello ${title} ${name}, we missed you at Answered Prayer Network on ${dateText}! We hope you are doing well. Looking forward to seeing you soon. Stay blessed. #APN.`,
+    `Peace be with you ${title} ${name}. Answered Prayer Network noticed your absence on ${dateText}. We are praying for you and hope all is well. See you in the next service! #APN.`,
+    `Hi ${title} ${name}, Answered Prayer Network here. We missed your presence at church on ${dateText}. Is everything okay? We are here for you. God bless you. #APN.`,
+    `Greetings ${title} ${name}, we missed you on ${dateText} at Answered Prayer Network. "Let us not give up meeting together... but let us encourage one another." (Hebrews 10:25). Hope to see you soon! #APN.`,
+    `Greetings ${title} ${name}, this is Answered Prayer Network. We just wanted to check up on you as we missed you in church on ${dateText}. We hope all is well. We look forward to seeing you this week . God richly bless you. #APN`
+  ];
+  
+  const randomIndex = Math.floor(Math.random() * templates.length);
+  return templates[randomIndex];
 };
 
 const normalizePhone = (raw) => {
@@ -169,7 +171,7 @@ async function sendSms({ to, message }) {
   const recipient = normalizePhone(to);
   const token = process.env.SMS_API_TOKEN || process.env.SMS_API_KEY; 
   const senderId = process.env.SMS_SENDER_ID || "APN";
-  const endpoint = process.env.SMS_API_URL || "https://api.xxxxxxxxxxxxxxxxxxxxxx/";
+  const endpoint = process.env.SMS_API_URL
 
   if (!recipient) return { success: false, to, error: "Missing phone number" };
   if (!token) {
@@ -178,23 +180,45 @@ async function sendSms({ to, message }) {
   }
 
   try {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { 
-        authorization: `Bearer ${token}`, 
-        "content-type": "application/json" 
-      },
-      body: JSON.stringify({ 
+    const response = await axios.post(
+      endpoint,
+      { 
         senderId: senderId, 
         contacts: [recipient], 
         message 
-      }),
-    });
-    
-    const data = await res.json().catch(() => ({}));
-    return { success: res.ok, status: res.status, to: recipient, data };
+      },
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+          "content-type": "application/json"
+        }
+      }
+    );
+
+    const data = response.data;
+
+    if (data?.msg?.includes("Insufficient SMS credits") || data?.message?.includes("Insufficient SMS credits")) {
+      return { success: false, to: recipient, error: "Insufficient SMS credits please recharge to continue" };
+    }
+
+    if (data?.success === false || data?.result?.success === false) {
+       return {
+         success: false,
+         to: recipient,
+         error: data?.message || data?.result?.message || "Failed to send SMS"
+       };
+    }
+
+    return { success: true, status: response.status, to: recipient, data };
+
   } catch (err) {
-    return { success: false, to: recipient, error: err.message };
+    // Axios gives detailed error responses if the API returns a 400/500 status
+    console.error("SMS API Error:", err.response?.data || err.message);
+    return { 
+      success: false, 
+      to: recipient, 
+      error: err.response?.data?.message || err.message 
+    };
   }
 }
 
@@ -438,6 +462,7 @@ app.post("/api/sms/send-absentees", requireAdmin, async (req, res) => {
   }
 
   const results = [];
+  let insufficientCreditsError = null;
   
   for (const member of absentees) {
     // Map Frontend fields (fullName, contacts) to Backend expectations
@@ -456,7 +481,20 @@ app.post("/api/sms/send-absentees", requireAdmin, async (req, res) => {
       ...result,
     });
 
+    // Stop sending if we hit an insufficient credits error
+    if (result.error === "Insufficient SMS credits please recharge to continue") {
+      insufficientCreditsError = result.error;
+      break; 
+    }
+
     await new Promise((r) => setTimeout(r, 250)); 
+  }
+
+  if (insufficientCreditsError) {
+    return res.status(400).json({
+      success: false,
+      message: insufficientCreditsError
+    });
   }
 
   const sent = results.filter((r) => r.success).length;

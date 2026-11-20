@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import Swal from "sweetalert2"; 
 import {
   FaUserCheck,
   FaUserTimes,
@@ -103,15 +104,52 @@ export default function MemberDashboard() {
     }
     setSending(true);
     setStatus({ type: "", message: "" });
+    
     try {
       const data = await api.sendSms(date, password);
       setSendResult(data);
-      setStatus({
-        type: data.failed ? "warning" : "success",
-        message: `Sent ${data.sent} of ${data.requested} SMS.`,
-      });
+
+      // 1. Check if the backend returned a global error (like Insufficient Credits)
+      if (data.message && data.message.includes("Insufficient SMS credits")) {
+        Swal.fire({
+          icon: "error",
+          title: "Insufficient Credits",
+          text: data.message,
+          confirmButtonColor: "#d33",
+        });
+        return;
+      }
+
+      if (data.failed > 0) {
+        const firstFailed = data.results.find((r) => !r.success);
+        const errorMessage = firstFailed?.error || "Unknown error";
+
+        Swal.fire({
+          icon: "warning",
+          title: data.sent === 0 ? "SMS Failed" : "Partially Sent",
+          html: `
+            <p><strong>${data.sent}</strong> of <strong>${data.requested}</strong> SMS sent.</p>
+            <p style="color:#d33; margin-top: 10px;"><strong>Provider Error:</strong> ${errorMessage}</p>
+          `,
+          confirmButtonColor: "#17365D",
+        });
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "All messages sent successfully!",
+          confirmButtonColor: "#17365D",
+        });
+      }
+      
     } catch (err) {
       setStatus({ type: "error", message: err.message });
+      Swal.fire({
+        icon: "error",
+        title: "SMS Failed",
+        text: err.message,
+        confirmButtonColor: "#d33",
+      });
     } finally {
       setSending(false);
     }

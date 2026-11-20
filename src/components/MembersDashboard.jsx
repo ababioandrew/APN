@@ -196,7 +196,7 @@ export default function MembersDashboard() {
       title: "Delete Announcement?",
       html: `Are you sure you want to delete <strong>${announcement.title}</strong>?`,
       showCancelButton: true,
-      confirmButtonColor: "#d33",
+      confirmButtonColor: "#d33"
     });
     if (!confirmation.isConfirmed) return;
 
@@ -206,10 +206,13 @@ export default function MembersDashboard() {
       showCancelButton: true,
       confirmButtonColor: "#d33",
       inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
+      showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
     });
     if (!passwordPrompt.isConfirmed) return;
     if (passwordPrompt.value !== ADMIN_DELETE_PASSWORD) {
-      return Swal.fire({ icon: "error", title: "Incorrect Password", confirmButtonColor: "#d33" });
+      return Swal.fire({ icon: "error", title: "Incorrect Password", confirmButtonColor: "#d33"});
     }
 
     try {
@@ -284,75 +287,117 @@ export default function MembersDashboard() {
     }
   };
 
- const handleSendAbsenteeSMS = async (absentList, dateISO) => {
-if (!absentList || absentList.length === 0) {
-return showAlert("info", "No Absentees", "Everyone is present — nothing to send.");
-}
+  const handleSendAbsenteeSMS = async (absentList, dateISO) => {
+    if (!absentList || absentList.length === 0) {
+      return showAlert("info", "No Absentees", "Everyone is present — nothing to send.");
+    }
 
-const confirmation = await Swal.fire({
-icon: "question",
-title: `Send SMS to ${absentList.length} absent member${absentList.length > 1 ? "s" : ""}?`,
-html: `This will send an SMS to each absentee for <strong>${dateISO}</strong>.`,
-showCancelButton: true,
-confirmButtonColor: "#17365D",
-confirmButtonText: "Yes, send SMS",
-});
-if (!confirmation.isConfirmed) return;
+    const confirmation = await Swal.fire({
+      icon: "question",
+      title: `Send SMS to ${absentList.length} absent member${absentList.length > 1 ? "s" : ""}?`,
+      html: `This will send an SMS to each absentee for <strong>${dateISO}</strong>.`,
+      showCancelButton: true,
+      confirmButtonColor: "#17365D",
+      confirmButtonText: "Yes, send SMS",
+    });
+    if (!confirmation.isConfirmed) return;
 
-const passwordPrompt = await Swal.fire({
-title: "Admin Password Required",
-input: "password",
-showCancelButton: true,
-confirmButtonColor: "#17365D",
-inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
-});
-if (!passwordPrompt.isConfirmed) return;
+    const passwordPrompt = await Swal.fire({
+      title: "Admin Password Required",
+      input: "password",
+      showCancelButton: true,
+      confirmButtonColor: "#17365D",
+      inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
+    });
+    if (!passwordPrompt.isConfirmed) return;
 
-try {
-setSendingSms(true);
-const res = await fetch(`${BACKEND_URL}/api/sms/send-absentees`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    password: passwordPrompt.value,
-    date: dateISO,
-    absentees: absentList.map((m) => ({
-      fullName: m.fullName,
-      gender: m.gender,
-      maritalStatus: m.maritalStatus,
-      contacts: m.contacts,
-    })),
-  }),
-});
+    // ✅ CHECK PASSWORD HERE BEFORE SENDING
+    if (passwordPrompt.value !== ADMIN_DELETE_PASSWORD) {
+      return Swal.fire({
+        icon: "error",
+        title: "Incorrect Password",
+        text: "The password you entered is incorrect.",
+        confirmButtonColor: "#d33",
+      });
+    }
 
-const data = await res.json().catch(() => ({}));
-if (!res.ok || !data.success) {
-throw new Error(data.message || `Server error (${res.status})`);
-}
+    try {
+      setSendingSms(true);
+      const res = await fetch(`${BACKEND_URL}/api/sms/send-absentees`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: passwordPrompt.value,
+          date: dateISO,
+          absentees: absentList.map((m) => ({
+            fullName: m.fullName,
+            gender: m.gender,
+            maritalStatus: m.maritalStatus,
+            contacts: m.contacts,
+          })),
+        }),
+      });
 
-Swal.fire({
-icon: data.failed ? "warning" : "success",
-title: data.failed ? "Partially Sent" : "SMS Sent",
-html: `<p><strong>${data.sent}</strong> of <strong>${data.requested}</strong> SMS sent successfully.</p>` +
-(data.failed ? `<p style="color:#b91c1c;">${data.failed} failed — check console for details.</p>` : ""),
-});
+      const data = await res.json().catch(() => ({}));
+      
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || `Server error (${res.status})`);
+      }
 
-console.table(data.results);
-} catch (err) {
-if (err.message && err.message.includes("Insufficient SMS credits")) {
-Swal.fire({
-icon: "error",
-title: "Insufficient SMS Credits",
-text: "Insufficient SMS credits please recharge to continue",
-confirmButtonColor: "#d33",
-});
-} else {
-showAlert("error", "SMS Failed", err.message);
-}
-} finally {
-setSendingSms(false);
-}
-} 
+      // ✅ Check for "Insufficient SMS credits" error in the results array
+      const creditError = data.results?.find(
+        (r) => r.error && r.error.includes("Insufficient SMS credits")
+      );
+
+      if (creditError) {
+        Swal.fire({
+          icon: "error",
+          title: "Insufficient SMS Credits",
+          text: "Insufficient SMS credits please recharge to continue",
+          confirmButtonColor: "#d33",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else if (data.failed > 0) {
+        const firstFailed = data.results.find((r) => !r.success);
+        const errorMessage = firstFailed?.error || "Unknown error";
+
+        Swal.fire({
+          icon: "warning",
+          title: data.sent === 0 ? "SMS Failed" : "Partially Sent",
+          html: `
+            <p><strong>${data.sent}</strong> of <strong>${data.requested}</strong> SMS sent.</p>
+            <p style="color:#d33; margin-top: 10px;"><strong>Provider Error:</strong> ${errorMessage}</p>
+          `,
+          confirmButtonColor: "#17365D",
+        });
+      } else {
+        // ✅ Complete Success
+        Swal.fire({
+          icon: "success",
+          title: "SMS Sent",
+          html: `<p><strong>${data.sent}</strong> of <strong>${data.requested}</strong> SMS sent successfully.</p>`,
+          confirmButtonColor: "#17365D",
+        });
+      }
+
+      console.table(data.results);
+    } catch (err) {
+      if (err.message && err.message.includes("Insufficient SMS credits")) {
+        Swal.fire({
+          icon: "error",
+          title: "Insufficient SMS Credits",
+          text: "Insufficient SMS credits please recharge to continue",
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        showAlert("error", "SMS Failed", err.message);
+      }
+    } finally {
+      setSendingSms(false);
+    }
+  };
 
   const handleSaveAttendance = async () => {
     try {
