@@ -2464,8 +2464,9 @@ Church Announcements
 <h2 style={{ fontSize: '2rem', margin: '10px 0', color: '#fff', fontFamily: "'Playfair Display', serif" }}>
 Next Sunday Service
 </h2>
+
 <p style={{ color: 'rgba(255,255,255,.75)', marginBottom: 10 }}>
-Streaming live every Sunday at 9:00 AM GMT
+Streaming live every Sunday at 3:00 PM GMT
 </p>
 <Countdown target={nextService} />
 <div style={{ marginTop: 30 }}>
