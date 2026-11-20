@@ -11,13 +11,11 @@ const API = {
   latest: `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`,
 };
 
-// --- BACKEND (for SMS only) ---
-const BACKEND_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
-
+const BACKEND_URL = "https://apn-nu.vercel.app"; 
 const ADMIN_DELETE_PASSWORD = ".apn";
 
 // --------------------------------------------------
-// INITIAL APN MEMBERS DATA (Fallback)
+// ✅ RESTORED FALLBACK DATA 
 // --------------------------------------------------
 const APN_INITIAL_DATA = [
   { fullName: "Rich Almor", gender: "Male", location: "Spintex road", dateOfBirth: "2026-11-03", dateOfEntry: "2026-11-03", contacts: "0548099730", email: "honbrewandy@yahoo.com", remarks: "New member", id: "1793707281348", maritalStatus: "", role: "Member" },
@@ -96,7 +94,7 @@ export default function MembersDashboard() {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [sendingSms, setSendingSms] = useState(false); // NEW
+  const [sendingSms, setSendingSms] = useState(false);
   const [backendStatus, setBackendStatus] = useState("Checking...");
 
   const showAlert = (icon, title, text) => Swal.fire({ icon, title, text, timer: 3000, timerProgressBar: true, showConfirmButton: false });
@@ -115,8 +113,9 @@ export default function MembersDashboard() {
       
       setBackendStatus("Connected (JSONBin)");
     } catch (error) {
-      console.error("Data loading error:", error);
+      console.error("Data loading error from JSONBin:", error);
       setBackendStatus("Connection failed");
+      // ✅ Fallback to initial data if JSONBin fails
       setMembers(APN_INITIAL_DATA.map(normalizeMember));
     } finally {
       setLoading(false);
@@ -196,23 +195,21 @@ export default function MembersDashboard() {
       title: "Delete Announcement?",
       html: `Are you sure you want to delete <strong>${announcement.title}</strong>?`,
       showCancelButton: true,
-      confirmButtonColor: "#d33"
+      confirmButtonColor: "#d33",
     });
     if (!confirmation.isConfirmed) return;
 
+    // ✅ FIXED: Removed the 3-second timer from the password prompt so you can type
     const passwordPrompt = await Swal.fire({
       title: "Admin Password Required",
       input: "password",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       inputValidator: (value) => (!value || !value.trim()) ? "Password cannot be empty." : null,
-      showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
     });
     if (!passwordPrompt.isConfirmed) return;
     if (passwordPrompt.value !== ADMIN_DELETE_PASSWORD) {
-      return Swal.fire({ icon: "error", title: "Incorrect Password", confirmButtonColor: "#d33"});
+      return Swal.fire({ icon: "error", title: "Incorrect Password", confirmButtonColor: "#d33" });
     }
 
     try {
@@ -360,6 +357,7 @@ export default function MembersDashboard() {
           timerProgressBar: true,
         });
       } else if (data.failed > 0) {
+        // ✅ If it failed, show the actual error from the SMS provider
         const firstFailed = data.results.find((r) => !r.success);
         const errorMessage = firstFailed?.error || "Unknown error";
 

@@ -174,10 +174,6 @@ async function sendSms({ to, message }) {
   const senderId = "APN";
 
   if (!recipient) return { success: false, to, error: "Missing phone number" };
-  if (!token) {
-    console.log(`\n[SMS:DEV] to=${recipient}\n           ${message}\n`);
-    return { success: true, dev: true, to: recipient };
-  }
 
   try {
     const response = await axios.post(
@@ -212,7 +208,6 @@ async function sendSms({ to, message }) {
     return { success: true, status: response.status, to: recipient, data };
 
   } catch (err) {
-    // Axios gives detailed error responses if the API returns a 400/500 status
     console.error("SMS API Error:", err.response?.data || err.message);
     return { 
       success: false, 
