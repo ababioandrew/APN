@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./BirthdayCelebrants.css";
 
-const JSONBIN_BIN_ID = process.env.REACT_APP_JSONBIN_BIN_ID || "6af8d362ac6210605a88248b";
-const JSONBIN_MASTER_KEY = process.env.REACT_APP_JSONBIN_MASTER_KEY || "$2a$10$Q/2lVH/nwELkpa5V3Sf/dOkGCRhpSl46JcsO.dGv5Q1rg/F7P5VO6";
+const JSONBIN_BIN_ID = process.env.REACT_APP_JSONBIN_BIN_ID || "6b039eeaac6210605a9cee94";
+const JSONBIN_MASTER_KEY = process.env.REACT_APP_JSONBIN_MASTER_KEY || "$2a$10$vHVlIdrYpHuwF/VxfmetyufB6JoAqbipsW/Wi5vn6284P/lTnYQHO";
 const parseDateSafe = (dateStr) => {
   if (!dateStr) return null;
   // Try standard JS Date parsing (handles YYYY-MM-DD)

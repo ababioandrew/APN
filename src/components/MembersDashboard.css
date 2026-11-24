@@ -1089,3 +1089,53 @@
     text-align: center;
   }
 }
+
+
+/* =========================================
+   BUTTON LOADING STATE — CODE A
+========================================= */
+
+.submit-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Loading spinner */
+
+.spinner {
+  width: 17px;
+  height: 17px;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation: buttonSpin 0.7s linear infinite;
+}
+
+@keyframes buttonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Keep button content centered */
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+/* Prevent button movement while loading */
+
+.submit-btn:disabled:hover {
+  transform: none;
+}
