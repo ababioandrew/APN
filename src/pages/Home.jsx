@@ -1928,6 +1928,47 @@ function PictureSlider({ images = [], interval = 3000, showDots = true, showArro
   );
 }
 export default function Home() {
+    const [demographics, setDemographics] = useState({ total: 0, adults: 0, youth: 0, children: 0 });
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  // ✅ Fetch and Calculate Age Demographics
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+          headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+        });
+        const data = await response.json();
+        const record = data?.record ?? data;
+        const members = Array.isArray(record) ? record : Array.isArray(record?.members) ? record.members : [];
+
+        let adults = 0, youth = 0, children = 0;
+        const today = new Date();
+
+        members.forEach(m => {
+          if (!m.dateOfBirth) return;
+          const birthDate = new Date(m.dateOfBirth);
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+          }
+
+          if (age <= 12) children++;
+          else if (age >= 13 && age <= 19) youth++;
+          else adults++;
+        });
+
+        setDemographics({ total: members.length, adults, youth, children });
+      } catch (err) {
+        console.error("Failed to fetch member stats:", err);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+    fetchStats();
+  }, []);
+  
 const [currentIndex, setCurrentIndex] = useState(0);
 const [selectedAudioIndex, setSelectedAudioIndex] = useState('');
 const [selectedCommandingWeekIndex, setSelectedCommandingWeekIndex] = useState('');

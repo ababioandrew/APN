@@ -2289,3 +2289,144 @@ img[src*="menthorShip"]:hover {
     max-width: 100%;
   }
 }
+/* =========================================
+   HOME DEMOGRAPHICS SECTION
+========================================= */
+
+.home-demographics {
+  padding: 80px 20px;
+  background: #ffffff;
+}
+
+.demographics-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.demographics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.demo-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  border-bottom: 5px solid #142d4e;
+  box-shadow: 0 4px 15px rgba(20, 45, 78, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.demo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(20, 45, 78, 0.1);
+}
+
+.demo-card h3 {
+  margin: 0 0 15px 0;
+  color: #64748b;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.demo-card p {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #142d4e;
+}
+
+/* Color Coding */
+.demo-card.total { border-color: #142d4e; }
+.demo-card.adults { border-color: #3b82f6; }
+.demo-card.adults p { color: #3b82f6; }
+
+.demo-card.youth { border-color: #f59e0b; }
+.demo-card.youth p { color: #f59e0b; }
+
+.demo-card.children { border-color: #10b981; }
+.demo-card.children p { color: #10b981; }
+
+.demographics-loading {
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 20px;
+}
+
+/* =========================================
+   HOME DEMOGRAPHICS SECTION
+========================================= */
+
+.home-demographics {
+  padding: 80px 20px;
+  background: #ffffff;
+}
+
+.demographics-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.demographics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.demo-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  border-bottom: 5px solid #142d4e;
+  box-shadow: 0 4px 15px rgba(20, 45, 78, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.demo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(20, 45, 78, 0.1);
+}
+
+.demo-card h3 {
+  margin: 0 0 15px 0;
+  color: #64748b;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.demo-card p {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #142d4e;
+}
+
+/* Color Coding */
+.demo-card.total { border-color: #142d4e; }
+.demo-card.adults { border-color: #3b82f6; }
+.demo-card.adults p { color: #3b82f6; }
+
+.demo-card.youth { border-color: #f59e0b; }
+.demo-card.youth p { color: #f59e0b; }
+
+.demo-card.children { border-color: #10b981; }
+.demo-card.children p { color: #10b981; }
+
+.demographics-loading {
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 20px;
+}
