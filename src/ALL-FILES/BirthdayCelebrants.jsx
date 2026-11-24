@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./BirthdayCelebrants.css";
 
-const JSONBIN_BIN_ID = process.env.REACT_APP_JSONBIN_BIN_ID || "6b0615acac6210605aa1f169 ";
+const JSONBIN_BIN_ID = process.env.REACT_APP_JSONBIN_BIN_ID || "6b0615acac6210605aa1f169";
 const JSONBIN_MASTER_KEY = process.env.REACT_APP_JSONBIN_MASTER_KEY || "$2a$10$vHVlIdrYpHuwF/VxfmetyufB6JoAqbipsW/Wi5vn6284P/lTnYQHO";
 const parseDateSafe = (dateStr) => {
   if (!dateStr) return null;
